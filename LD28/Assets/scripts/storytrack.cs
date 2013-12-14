@@ -7,6 +7,7 @@ public class Storytrack : MonoBehaviour {
 
 	public GameObject st_element;
 	public GameObject spawn_point;
+	public Event eventController;
 
 	public float insertPushUpForce = 1.0f;
 	public int bottomCheck = 3;
@@ -21,7 +22,7 @@ public class Storytrack : MonoBehaviour {
 	int colorModulo;
 	
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		elements = new List<STElement>();
 		infos = new List<STElementInfo>();
 	}
@@ -36,16 +37,11 @@ public class Storytrack : MonoBehaviour {
 		}
 		string content = json.text;
 		JSONNode track = JSON.Parse(content);
-		int tileCount = track["tileCount"].AsInt;
+		int tileCount = track["eventCount"].AsInt;
 		int loadedTiles = 0;
 		for(int j = 0; j < tileCount; j++, loadedTiles++) {
-			string spriteName = track["tiles"][j]["sprite"];
-			JSONNode color = track["tiles"][j]["color"];
-			Color col = Color.white;
-			if(color != null) {
-				col = new Color(color["r"].AsFloat, color["g"].AsFloat, color["b"].AsFloat);
-			}
-			STElementInfo element = new STElementInfo(spriteName, col);
+			JSONNode stEvent = track["events"][j];
+			STElementInfo element = new STElementInfo(stEvent);
 			infos.Add(element);
 		}
 		return loadedTiles;
@@ -92,11 +88,22 @@ public class Storytrack : MonoBehaviour {
 		return elements[0].info;
 	}
 
+	public void UpdateEventScreen() {
+		if(elements.Count == 0) return;
+		StartCoroutine("WaitForBottomToSleep");
+		eventController.LoadEventInfo(this, GetActiveElement().eventInfo);
+	}
+
 	public void PopBottom() {
 		if(elements.Count == 0) return;
 		STElement element = elements[0];
 		Destroy (element.gameObject);
 		elements.RemoveAt(0);
+		UpdateEventScreen();
+	}
+
+	public void EventCompleted() {
+		PopBottom();
 	}
 
 	public void ClearElements() {
@@ -111,6 +118,7 @@ public class Storytrack : MonoBehaviour {
 			SpawnElement();
 			yield return new WaitForSeconds(0.5f);
 		}
+		UpdateEventScreen();
 	}
 	
 	private void CreateTwist(string sprite) {
@@ -141,13 +149,24 @@ public class Storytrack : MonoBehaviour {
 		GameObject element = Instantiate(st_element,
 		                                 position,
 		                                 Quaternion.identity) as GameObject;
-		SpriteRenderer sprite = element.GetComponent<SpriteRenderer>();
-		sprite.color = info.color;
 		STElement st = element.GetComponent<STElement>();
 		st.ConfigureElement(info);
 		return st;
 	}
-	
+
+	private IEnumerator WaitForBottomToSleep() {
+		yield return new WaitForSeconds(1.0f);
+		while(!CheckIfBottomIsSleeping()) {
+			yield return new WaitForSeconds(0.25f);
+		}
+	}
+
+	private bool CheckIfBottomIsSleeping() {
+		if(elements.Count == 0) return true;
+		STElement element = elements[0];
+		if(!element.rigidbody2D.IsSleeping()) return false;
+		return true;
+	}
 	
 	// A vast majority of our insert methods 'act funny' if the rigid bodies 
 	// aren't sleeping near the bottom

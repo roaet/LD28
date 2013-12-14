@@ -3,11 +3,11 @@ using System.Collections;
 using SimpleJSON;
 
 public class STElement : MonoBehaviour {
-	private SpriteRenderer sprite;
+	private SpriteRenderer m_sprite;
 	private STElementInfo m_info;
 	// Use this for initialization
 	void Awake () {
-		sprite = GetComponent<SpriteRenderer>();
+		m_sprite = GetComponent<SpriteRenderer>();
 	}
 
 	public STElementInfo info {
@@ -21,8 +21,13 @@ public class STElement : MonoBehaviour {
 		Sprite[] textures = Resources.LoadAll<Sprite>("images/st_elements");
 		string sprite = info.sprite;
 		foreach(Sprite s in textures) {
-			if(s.name == sprite) this.sprite.sprite = s;
+			if(s.name == sprite) {
+				m_sprite.sprite = s;
+				break;
+			}
 		}
+		m_sprite.color = info.color;
+
 	}
 	
 	// Update is called once per frame

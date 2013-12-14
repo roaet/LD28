@@ -1,15 +1,49 @@
 {
-	"tileCount": "8",
-	"tiles": [
+	"eventCount": "8",
+	"events": [
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": [
+				{ "sprite": "dragon_18" }
+			]
+		},
 		{ 
 			"sprite": "inn", 
-			"color": {"r": "1.0", "g": "0.0", "b": "0.0"}
+			"color": {"r": "1.0", "g": "0.0", "b": "0.0"},
+			"mobCount": "1",
+			"mobs": [
+				{ "sprite": "dragon_17" }
+			]
 		},
-		{ "sprite": "battle" },
-		{ "sprite": "battle" },
-		{ "sprite": "battle" },
-		{ "sprite": "battle" },
-		{ "sprite": "battle" },
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": [
+				{ "sprite": "dragon_15" }
+			]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": [
+				{ "sprite": "dragon_14" }
+			]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": [
+				{ "sprite": "dragon_19" }
+			]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": [
+				{ "sprite": "dragon_20" }
+			]
+		},
 		{ "sprite": "inn" },
 		{ "sprite": "exit" }
 	]

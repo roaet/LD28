@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+
+
 public class Game : MonoBehaviour {
-	public Storytrack storyTrack;
-	public GameObject eventElement;
+	[HideInInspector]
+	public Level currentLevel;
 
 	void Awake() {
 		DontDestroyOnLoad(gameObject);
@@ -11,27 +13,18 @@ public class Game : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown (KeyCode.Home)) {
-			int loadedTiles = storyTrack.LoadStoryTrackJSON("test");
-			if(loadedTiles > 0) {
-				storyTrack.Display();
-			}
-			UpdateEventElement();
-		}
-		if(Input.GetKeyDown (KeyCode.Delete)) {
-			storyTrack.PopBottom();
-			if(storyTrack.CheckIfSpawnActionAvailable()) {
-				storyTrack.SpawnElement();
-			}
-			UpdateEventElement();
+		if(Input.GetKeyDown(KeyCode.PageUp)) {
+			Application.LoadLevel("game");
 		}
 	}
 
-	private void UpdateEventElement() {
-		STElement st = eventElement.GetComponent<STElement>();
-		STElementInfo info = storyTrack.GetActiveElement();
-		eventElement.renderer.enabled = info != null;
-		if(info == null) return;
-		st.ConfigureElement(info);
+	void OnLevelWasLoaded() {
+		currentLevel = GameObject.FindObjectOfType<Level>();
+		if(currentLevel == null) {
+			Debug.LogError("Could not find level object in scene");
+			return;
+		}
+		currentLevel.debug = false;
+		currentLevel.LoadLevel("test");
 	}
 }
