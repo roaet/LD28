@@ -1,0 +1,14 @@
+{
+	"tileCount": "6",
+	"tiles": [
+		{ 
+			"sprite": "inn", 
+			"color": {"r": "1.0", "g": "0.0", "b": "0.0"}
+		},
+		{ "sprite": "goblin" },
+		{ "sprite": "goblin" },
+		{ "sprite": "goblin" },
+		{ "sprite": "inn" },
+		{ "sprite": "exit" }
+	]
+}
