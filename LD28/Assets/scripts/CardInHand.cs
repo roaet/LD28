@@ -6,10 +6,11 @@ public class CardInHand : MonoBehaviour {
 	private PlayerHand m_hand;
 	private Vector3 targetPosition;
 	private Vector3 restingPosition;
+	private bool isSelected;
 
 	// Use this for initialization
 	void Start () {
-	
+		isSelected = false;
 	}
 	
 	// Update is called once per frame
@@ -48,6 +49,14 @@ public class CardInHand : MonoBehaviour {
 			targetPosition = value;
 		} get {
 			return targetPosition;
+		}
+	}
+
+	public bool selected {
+		set {
+			isSelected = value;
+		} get {
+			return isSelected;
 		}
 	}
 }

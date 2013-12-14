@@ -6,30 +6,38 @@ public class PlayerHand : MonoBehaviour {
 	public GameObject cardPrefab;
 	public GameObject firstCard;
 	public GameObject lastCard;
+	public GameObject cardConfirm;
 
 	private List<CardInHand> m_cards;
 	private CardInHand focusedCard;
 	private CardInHand lastFocusedCard;
 
+	private CardInHand selectedCard;
+	private int selectedCardIndex;
+	private GameObject confirmObject;
+	private bool change;
+
 	// Use this for initialization
 	void Start () {
 		m_cards = new List<CardInHand>();
 		lastFocusedCard = focusedCard = null;
+		change = false;
 	}
 
 	public void CardWasClicked(CardInHand card) {
-		Debug.Log ("A card was clicked, yo");
+		if(selectedCard != null) return;
+		SelectACard(card);
 	}
 
 	public void CardFocused(CardInHand card) {
+		if(selectedCard != null) return;
 		focusedCard = card;
-		//PushCardsAwayFromIndex(idx);
 	}
 	
 	public void CardUnfocused(CardInHand card) {
+		if(selectedCard != null) return;
 		lastFocusedCard = card;
 		focusedCard = null;
-		//OrganizeCards();
 	}
 
 	private void TweenTo(CardInHand card, Vector3 position) {
@@ -110,8 +118,8 @@ public class PlayerHand : MonoBehaviour {
 		if(m_cards.Count == 1) {
 			m_cards[0].resting = PointByDistance(0.5f);
 		} else if(m_cards.Count == 2) {
-			m_cards[0].resting = PointByDistance(0.33f);
-			m_cards[1].resting = PointByDistance(0.66f);
+			m_cards[0].resting = PointByDistance(0.25f);
+			m_cards[1].resting = PointByDistance(0.75f);
 		} else if(m_cards.Count == 3) {
 			m_cards[0].resting = a;
 			m_cards[1].resting = PointByDistance(0.5f);
@@ -172,14 +180,59 @@ public class PlayerHand : MonoBehaviour {
 		Destroy(card.gameObject);
 		m_cards.RemoveAt(idx);
 	}
+
+	private void SelectACard(CardInHand card) {
+		selectedCard = card;
+		int idx = FindIndexOfCard(card);
+		selectedCardIndex = idx;
+		m_cards.RemoveAt(idx);
+		TweenTo (card, new Vector3(0.0f, 0.0f, -6.0f));
+		iTween.ScaleTo(card.gameObject, new Vector3(2.0f, 2.0f, 1.0f), 1.0f);
+		change = true;
+		selectedCard.selected = true;
+		lastFocusedCard = card;
+		focusedCard = null;
+		BringUpConfirmation();
+	}
+
+	private void BringUpConfirmation() {
+		if(confirmObject != null) return;
+		GameObject element = Instantiate(cardConfirm,
+		                                 new Vector3(0.0f, 0.0f, -5.0f),
+		                                 Quaternion.identity) as GameObject;
+		iTween.Init(element);
+		iTween.FadeFrom (element, iTween.Hash("alpha", 0.0f, "time", 0.25f));
+		CardConfirm confirm = element.GetComponent<CardConfirm>();
+		confirm.hand = this;
+		confirmObject = element;
+	}
+
+	public void CancelSelection() {
+		iTween.ScaleTo(selectedCard.gameObject, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+		m_cards.Insert(selectedCardIndex, selectedCard);
+		selectedCard.selected = false;
+		selectedCard = null;
+		change = true;
+		Destroy(confirmObject);
+	}
+
+	public void ConfirmSelection() {
+		Destroy(confirmObject);
+		Destroy(selectedCard.gameObject);
+		selectedCard.selected = false;
+		selectedCard = null;
+
+	}
 	
 	// Update is called once per frame
 	void Update () {
-		bool change = false;
 		if(Input.GetKeyDown(KeyCode.D)) {
 			CardInHand card = CreateCard(transform.position);
 			m_cards.Add (card);
 			change = true;
+		}
+		if(selectedCard != null && Input.GetKeyDown(KeyCode.Delete)) {
+			CancelSelection();
 		}
 		if(Input.GetKeyDown(KeyCode.Alpha1)) {
 			RemoveCardAt(0);
@@ -201,10 +254,11 @@ public class PlayerHand : MonoBehaviour {
 			lastFocusedCard = focusedCard;
 			PushCardsAwayFrom(focusedCard);
 		}
-		if(focusedCard != null) {
+		if(focusedCard != null && m_cards.Count > 3) {
 			MoveCardsToTargets();
 		} else {
 			MoveCardsToResting();
 		}
+		change = false;
 	}
 }
