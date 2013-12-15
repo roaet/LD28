@@ -36,6 +36,14 @@ public class CardManager {
 		m_deck.LoadDeck(deck);
 	}
 
+	public List<CardInfo> GetEnabledCards() {
+		List<CardInfo> ret = new List<CardInfo>();
+		foreach(CardInfo info in m_cards) {
+			if(info.enabled) ret.Add(info);
+		}
+		return ret;
+	}
+
 	public CardInfo GetCardByName(string name) {
 		foreach(CardInfo info in m_cards) {
 			if(info.name == name) {

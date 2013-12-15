@@ -16,7 +16,7 @@ public class Person {
 		m_currentHealth = m_health;
 	}
 
-	public string desc { get { return m_name + " "+ m_currentHealth + "/" + m_health; } } 
+	public string desc { get { return m_name + "\nHP: "+ m_currentHealth; } } 
 	public int totalHealth { get { return m_health; } }
 	public int currentHealth { get { return m_currentHealth; } }
 	public int damage { get { return m_info.damage; } }

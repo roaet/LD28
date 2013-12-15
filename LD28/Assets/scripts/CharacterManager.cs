@@ -40,6 +40,20 @@ public class CharacterManager {
 		return true;
 	}
 
+
+	public bool IsPartyFullHealth() {
+		foreach(Person p in party) {
+			if(p.currentHealth < p.totalHealth) return false;
+		}
+		return true;
+	}
+
+	public void HealPartyFor(int heal) {
+		foreach(Person p in party) {
+			p.Heal(heal);
+		}
+	}
+
 	public bool PartyAlive() {
 		foreach(Person p in party) {
 			if(p.currentHealth > 0) return true;

@@ -6,14 +6,16 @@
 			"sprite" : "dragon_0",
 			"health" : "2",
 			"hasHealth": "true",
-			"damage": "1"
+			"damage": "1",
+			"gold" : "2"
 		},
 		{
 			"name" : "baby_green_dragon",
 			"sprite" : "dragon_3",
 			"health" : "1",
 			"hasHealth": "true",
-			"damage": "2"
+			"damage": "2",
+			"gold" : "2"
 		}
 	}
 }

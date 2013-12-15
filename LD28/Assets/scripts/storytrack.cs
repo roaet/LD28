@@ -103,6 +103,9 @@ public class Storytrack : MonoBehaviour {
 		if(info.isStore) {
 			m_level.QueueStore();
 		}
+		if(info.isInn) {
+			m_level.QueueInn();
+		}
 		eventController.LoadEventInfo(m_level.mobManager, this, GetActiveElement().eventInfo);
 	}
 
@@ -115,7 +118,7 @@ public class Storytrack : MonoBehaviour {
 	}
 
 	public bool CheckEventState() {
-		int mobsAlive = eventController.CheckMobStates();
+		int mobsAlive = eventController.CheckMobStates(m_level);
 		if(mobsAlive == 0){
 			EventCompleted();
 			return true;

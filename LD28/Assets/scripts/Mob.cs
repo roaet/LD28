@@ -17,6 +17,7 @@ public class Mob : MonoBehaviour {
 		m_sprite = GetComponent<SpriteRenderer>();
 	}
 
+	public int gold { get { return m_info.gold; } }
 	public int damage { get { return m_info.damage; } }
 
 	public int health {

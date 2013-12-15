@@ -20,14 +20,17 @@ public class CardInHand : MonoBehaviour {
 	}
 
 	void OnMouseEnter() {
+		if(m_hand == null) return;
 		m_hand.CardFocused(this);
 	}
 
 	void OnMouseExit() {
+		if(m_hand == null) return;
 		m_hand.CardUnfocused(this);
 	}
 
 	void OnMouseDown() {
+		if(m_hand == null) return;
 		m_hand.CardWasClicked(this);
 	}
 

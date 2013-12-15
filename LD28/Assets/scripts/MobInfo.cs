@@ -10,6 +10,7 @@ public class MobInfo {
 	private int m_health;
 	private bool m_hasHealth;
 	private int m_damage;
+	private int m_gold;
 	
 	public MobInfo(JSONNode mobJson) {
 		m_sprite = mobJson["sprite"];
@@ -17,11 +18,13 @@ public class MobInfo {
 		m_health = mobJson["health"].AsInt;
 		m_hasHealth = mobJson["hasHealth"].AsBool;
 		m_damage = mobJson["damage"].AsInt;
+		m_gold = mobJson["gold"].AsInt;
 		m_color = Color.white;
 
 	}
 
 	public int damage { get { return m_damage; } }
+	public int gold { get { return m_gold; } }
 
 	public bool hasHealth {
 		get {

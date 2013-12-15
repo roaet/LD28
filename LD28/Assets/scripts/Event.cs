@@ -55,6 +55,7 @@ public class Event : MonoBehaviour {
 		foreach(string mobName in m_info.mobs) {
 			MobInfo mobInfo = mobManager.GetMobByName(mobName);
 			Mob mob = CreateMob(mobInfo, transform.position);
+			if(mob == null) continue;
 			m_mobs.Add(mob);
 		}
 		MoveMobsToSpawns();
@@ -65,7 +66,7 @@ public class Event : MonoBehaviour {
 	}
 
 	private void MoveMobsToSpawns() {
-		if(m_mobs.Count == 0) return;
+		if(m_mobs.Count == 0 || m_info.isInn || m_info.isStore) return;
 		// More jank. Fix this
 		if(m_mobs.Count == 1) {
 			m_mobs[0].transform.position = spawn2.transform.position;	
@@ -82,6 +83,7 @@ public class Event : MonoBehaviour {
 	}
 
 	private void ClearMobs() {
+		if(m_info == null || m_info.isInn || m_info.isStore) return;
 		foreach(Mob mob in m_mobs) {
 			Destroy(mob.gameObject);		
 		}
@@ -89,7 +91,7 @@ public class Event : MonoBehaviour {
 	}
 
 	private Mob CreateMob(MobInfo info, Vector3 position) {
-		if(m_info.mobs.Count <= 0) return null;
+		if(m_info.mobs.Count <= 0 || m_info.isInn || m_info.isStore) return null;
 		GameObject element = Instantiate(mobPrefab,
 		                                 position,
 		                                 Quaternion.identity) as GameObject;
@@ -149,6 +151,8 @@ public class Event : MonoBehaviour {
 				yield return new WaitForSeconds(time);
 				if(doMassAttack) DamageAllMobs(damage);
 				else DamageRandomMob(damage);
+				int monstersLeft = CheckMobStates(data.level);
+				if(monstersLeft == 0) break;
 			}
 		}
 		data.level.EndCharacterAnimation();
@@ -171,10 +175,10 @@ public class Event : MonoBehaviour {
 		if(selectedMob == null) {
 			int idx = Random.Range (0, m_mobs.Count);
 			m_mobs[idx].TakeDamage(damage);
-		} selectedMob.TakeDamage(damage);
+		} else selectedMob.TakeDamage(damage);
 	}
 
-	public int CheckMobStates() {
+	public int CheckMobStates(Level level) {
 		List<Mob> aliveMobs = new List<Mob>();
 		List<Mob> deadMobs = new List<Mob>();
 		foreach(Mob mob in m_mobs) {
@@ -185,6 +189,7 @@ public class Event : MonoBehaviour {
 			}
 		}
 		foreach(Mob mob in deadMobs) {
+			level.AddGold(mob.gold);
 			Destroy(mob.gameObject);
 		}
 		deadMobs.Clear();

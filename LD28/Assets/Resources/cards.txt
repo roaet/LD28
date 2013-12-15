@@ -2,22 +2,28 @@
 	"cardCount" : "3",
 	"cards" : [
 		{
-			"name" : "fire",
+			"name" : "fire", "enabled": "true",
 			"sprite" : "fire",
 			"type" : "basic",
-			"target" : "single"
+			"target" : "single",
+			"tip": "A single target basic attack",
+			"cost": "7"
 		},
 		{
-			"name" : "attack",
+			"name" : "attack", "enabled": "true",
 			"sprite" : "attack",
 			"type" : "basic",
-			"target" : "single"
+			"target" : "single",
+			"tip": "A single target basic attack",
+			"cost": "5"
 		},
 		{
-			"name" : "derp",
+			"name" : "derp", "enabled": "true",
 			"sprite" : "derp",
 			"type" : "basic",
-			"target" : "mass"
+			"target" : "mass",
+			"tip": "A mass target basic attack",
+			"cost": "99"
 		}
 	}
 }

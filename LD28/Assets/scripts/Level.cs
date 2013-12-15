@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum TurnState {
-	loading, draw, use, useAnimate, save, store, mobAnimate, characterAnimate, partyWipe
+	loading, draw, use, useAnimate, save, store, mobAnimate, characterAnimate, partyWipe, inn
 }
 
 public class Level : MonoBehaviour {
@@ -11,6 +11,11 @@ public class Level : MonoBehaviour {
 	public CharacterUI charController;
 	public GameObject saveGuide;
 	public GameObject useGuide;
+	public GUIText goldText;
+	public Store store;
+	public Inn inn;
+	public int potionCost = 2;
+	public int potionPower = 4;
 
 	private bool m_debug = true;
 	private Game m_game;
@@ -20,13 +25,48 @@ public class Level : MonoBehaviour {
 	private TurnState m_state;
 	private bool drawing;
 	private bool storeQueued;
+	private int m_gold;
+	private bool innQueued;
 	
 	void Awake() {
 		drawing = false;
 		storyTrack.level = this;
-		storeQueued = false;
+		innQueued = storeQueued = false;
 		saveGuide.renderer.enabled = false;
 		useGuide.renderer.enabled = false;
+		m_gold = 15;
+	}
+
+	public void UsePotion() {
+		if(m_gold < potionCost || characterManager.IsPartyFullHealth()) {
+			return;
+		}
+		UseGold(potionCost);
+		characterManager.HealPartyFor(potionPower);
+	}
+
+	public void CardBuyAttempt(CardInfo card) {
+		if(m_gold < card.cost) {
+			return;
+		}
+		UseGold (card.cost);
+		cardManager.deck.PutCardIntoDiscard(card);
+	}
+
+	public int gold {
+		get {
+			return m_gold;
+		}
+	}
+
+	public void AddGold(int gold) {
+		Debug.Log ("Gained " + gold + " gold");
+		m_gold += gold;
+	}
+
+	public void UseGold(int gold) {
+		m_gold -= gold;
+		if(m_gold < 0) m_gold = 0;
 	}
 
 	public void LoadLevel(string level) {
@@ -42,20 +82,13 @@ public class Level : MonoBehaviour {
 
 		CharacterInfo info = characterManager.GetCharacterByName("squire");
 		Person p = new Person(info);
+		Person q = new Person(info);
 		characterManager.AddPersonToParty(p);
+		characterManager.AddPersonToParty(q);
 
 		playerHand.cardManager = cardManager;
 		playerHand.level = this;
 		m_state = TurnState.draw;
-	}
-
-	public void QueueStore() {
-		storeQueued = true;
-	}
-
-	public void BringUpStore() {
-		m_state = TurnState.store;
-		storeQueued = false;
 	}
 
 	public bool CardSelected(CardInHand card) {
@@ -159,6 +192,73 @@ public class Level : MonoBehaviour {
 		saveGuide.renderer.enabled = m_state == TurnState.save;
 		useGuide.renderer.enabled = m_state == TurnState.use;
 		playerHand.isEnabled = m_state == TurnState.save || m_state == TurnState.use;
+
+		goldText.text = gold.ToString();
+	}
+
+	public void QueueInn() {
+		innQueued = true;
+	}
+
+	public void BringUpInn() {
+		m_state = TurnState.inn;
+		innQueued = false;
+		inn.InitializeInn(storyTrack.GetActiveElement().eventInfo);
+	}
+	
+	public void InnClosed() {
+		storyTrack.EventCompleted();
+		if(storyTrack.CheckIfSpawnActionAvailable()) {
+			storyTrack.SpawnElement();
+		}
+		m_state = TurnState.draw;
+	}
+	
+	public void CloseInn() {
+		Vector3 curPosition = inn.transform.position;
+		curPosition.y = 7.0f;
+		iTween.MoveTo (inn.gameObject, iTween.Hash("position", curPosition,
+		                                           "oncompletetarget", this.gameObject,
+		                                           "oncomplete", "InnClosed"));
+	}
+	
+	
+	public void QueueStore() {
+		storeQueued = true;
+	}
+	
+	public void BringUpStore() {
+		m_state = TurnState.store;
+		storeQueued = false;
+		Vector3 curPosition = store.transform.position;
+		curPosition.y = 0.1f;
+		store.InitializeStore();
+		iTween.MoveTo (store.gameObject, iTween.Hash("position", curPosition,
+		                                             "easetype", iTween.EaseType.easeOutBounce,
+		                                             "oncompletetarget", this.gameObject,
+		                                             "oncomplete", "StoreOpened"));
+	}
+
+	public void StoreOpened() {
+		Debug.Log ("In da store");
+		store.isStoreUp = true;
+	}
+
+	public void StoreClosed() {
+		storyTrack.EventCompleted();
+		if(storyTrack.CheckIfSpawnActionAvailable()) {
+			storyTrack.SpawnElement();
+		}
+		m_state = TurnState.draw;
+	}
+
+	public void CloseStore() {
+		store.isStoreUp = false;
+		Vector3 curPosition = store.transform.position;
+		curPosition.y = 7.0f;
+		iTween.MoveTo (store.gameObject, iTween.Hash("position", curPosition,
+		                                             "oncompletetarget", this.gameObject,
+		                                             "oncomplete", "StoreClosed"));
 	}
 
 	// Update is called once per frame
@@ -169,13 +269,6 @@ public class Level : MonoBehaviour {
 		}
 		switch(m_state) {
 		case TurnState.store: {
-			if(Input.GetKeyDown(KeyCode.Escape)) {
-				storyTrack.EventCompleted();
-				if(storyTrack.CheckIfSpawnActionAvailable()) {
-					storyTrack.SpawnElement();
-				}
-				m_state = TurnState.draw;
-			}
 		} break;
 		case TurnState.draw: { // auto draw to max hand size (3)
 			charController.UpdateParty(characterManager);
@@ -186,6 +279,8 @@ public class Level : MonoBehaviour {
 			if(playerHand.Handsize >= 3) {
 				if(storeQueued) {
 					BringUpStore();
+				} else if(innQueued) {
+					BringUpInn();
 				} else {
 					m_state = TurnState.use;
 				}

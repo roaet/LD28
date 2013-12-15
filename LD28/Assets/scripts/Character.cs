@@ -20,7 +20,6 @@ public class Character : MonoBehaviour {
 		string sprite = m_person.info.portrait;
 		foreach(Sprite s in textures) {
 			if(s.name == sprite) {
-				Debug.Log ("Setting sprite to " +sprite);
 				portrait.sprite = s;
 				break;
 			}
@@ -29,7 +28,6 @@ public class Character : MonoBehaviour {
 		sprite = m_person.info.charClass;
 		foreach(Sprite s in textures) {
 			if(s.name == sprite) {
-				Debug.Log ("Setting sprite to " +sprite);
 				characterClass.sprite = s;
 				break;
 			}
