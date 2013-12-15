@@ -5,11 +5,11 @@ using SimpleJSON;
 
 public class CharacterManager {
 	private List<CharacterInfo> m_chars;
-	private List<CharacterInfo> m_party;
+	private List<Person> m_party;
 
 	public CharacterManager(string fileName) {
 		m_chars = new List<CharacterInfo>();
-		m_party = new List<CharacterInfo>();
+		m_party = new List<Person>();
 		TextAsset json = (TextAsset)Resources.Load(fileName, typeof(TextAsset));
 		if(!json) {
 			Debug.LogError("Couldn't find: " + fileName);
@@ -34,7 +34,20 @@ public class CharacterManager {
 		return null;
 	}
 
-	public List<CharacterInfo> party {
+	public bool AddPersonToParty(Person p) {
+		if(m_party.Count == 4) return false;
+		m_party.Add(p);
+		return true;
+	}
+
+	public bool PartyAlive() {
+		foreach(Person p in party) {
+			if(p.currentHealth > 0) return true;
+		}
+		return false;
+	}
+
+	public List<Person> party {
 		get {
 			return m_party;
 		}

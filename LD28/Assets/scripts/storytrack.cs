@@ -114,10 +114,13 @@ public class Storytrack : MonoBehaviour {
 		UpdateEventScreen();
 	}
 
-	public void CheckEventState() {
+	public bool CheckEventState() {
 		int mobsAlive = eventController.CheckMobStates();
-		Debug.Log ("There are " + mobsAlive + " mobs alive");
-		if(mobsAlive == 0)	EventCompleted();
+		if(mobsAlive == 0){
+			EventCompleted();
+			return true;
+		}
+		return false;
 	}
 
 	public void EventCompleted() {

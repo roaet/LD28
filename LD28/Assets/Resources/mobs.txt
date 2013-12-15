@@ -4,14 +4,16 @@
 		{
 			"name" : "baby_blue_dragon",
 			"sprite" : "dragon_0",
-			"health" : "10",
-			"hasHealth": "true"
+			"health" : "2",
+			"hasHealth": "true",
+			"damage": "1"
 		},
 		{
 			"name" : "baby_green_dragon",
 			"sprite" : "dragon_3",
-			"health" : "10",
-			"hasHealth": "true"
+			"health" : "1",
+			"hasHealth": "true",
+			"damage": "2"
 		}
 	}
 }

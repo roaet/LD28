@@ -31,6 +31,10 @@ public class Event : MonoBehaviour {
 		MoveMobsToSpawns();
 	}
 
+	public Storytrack story {
+		get { return m_st; }
+	}
+
 	private void MoveMobsToSpawns() {
 		if(m_mobs.Count == 0) return;
 		// More jank. Fix this
@@ -65,10 +69,78 @@ public class Event : MonoBehaviour {
 		return mob;
 	}
 
-	public void HandleCard(CardInfo card) {
-		foreach(Mob mob in m_mobs) {
-			mob.TakeDamage(5);
+	private struct MobActionData {
+		public Level level;
+		public CharacterManager chars;
+
+		public MobActionData(Level level, CharacterManager chars) {
+			this.level = level;
+			this.chars = chars;
 		}
+	}
+
+	public void HandleMobs(Level level, CharacterManager chars) {
+		StartCoroutine("DoMobAction", new MobActionData(level, chars));
+	}
+
+	private IEnumerator DoMobAction(MobActionData data) {
+		foreach(Mob mob in m_mobs) {
+			int damage = mob.damage;
+			float time = 0.25f;
+			mob.AnimateAttack(time);
+			yield return new WaitForSeconds(time);
+			DamageAllPlayers(damage, data.chars);
+		}
+		data.level.EndMobAnimation();
+	}
+
+	public void HandleCard(Level level, CardInfo card, CharacterManager chars) {
+		StartCoroutine("DoCharActions", new CharActionData(level, card, chars));
+	}
+
+	private struct CharActionData {
+		public Level level;
+		public CardInfo card;
+		public CharacterManager chars;
+
+		public CharActionData(Level l, CardInfo c, CharacterManager chars) {
+			level = l;
+			card = c;
+			this.chars = chars;
+		}
+	}
+
+	private IEnumerator DoCharActions(CharActionData data) {
+		bool doMassAttack = data.card.target == "mass";
+		if(data.card.type == "basic") {
+			foreach(Person p in data.chars.party) {
+				int damage = p.damage;
+				float time = 0.25f;
+				p.charUIElement.AnimateAttack(time);
+				yield return new WaitForSeconds(time);
+				if(doMassAttack) DamageAllMobs(damage);
+				else DamageRandomMob(damage);
+			}
+		}
+		data.level.EndCharacterAnimation();
+
+	}
+
+	private void DamageAllPlayers(int damage, CharacterManager chars) {
+		foreach(Person p in chars.party) {
+			p.Hurt(damage);
+		}
+	}
+
+	private void DamageAllMobs(int damage) {
+		foreach(Mob mob in m_mobs) {
+			mob.TakeDamage(damage);
+		}
+	}
+
+	private void DamageRandomMob(int damage) {
+		int idx = Random.Range (0, m_mobs.Count);
+		m_mobs[idx].TakeDamage(damage);
 	}
 
 	public int CheckMobStates() {

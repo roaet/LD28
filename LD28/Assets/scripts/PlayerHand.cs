@@ -267,7 +267,7 @@ public class PlayerHand : MonoBehaviour {
 
 	public void ConfirmSelection() {
 		if(confirmObject != null) Destroy(confirmObject);
-		bool doDestroy = level.CardSelected(selectedCard);
+		level.CardSelected(selectedCard);
 		selectedCard.selected = false;
 		selectedCard = null;
 	}

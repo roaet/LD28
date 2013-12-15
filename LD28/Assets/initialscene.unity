@@ -103,6 +103,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   currentLevel: {fileID: 0}
   cardFile: cards
+  mobFile: mobs
+  characterFile: characters
 --- !u!4 &396062477
 Transform:
   m_ObjectHideFlags: 0

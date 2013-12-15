@@ -1,6 +1,6 @@
 {
 	"charCount" : "1",
 	"chars" : [
-		{ "name" : "herp" }
+		{ "name" : "squire", "portrait": "knight", "class": "fighter", "damage" : "1", "hp" : "10"}
 	]
 }

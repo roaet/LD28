@@ -2,14 +2,53 @@
 using System.Collections;
 
 public class Character : MonoBehaviour {
-	public GUIText name;
-	private bool m_enabled;
-	private CharacterInfo m_info;
+	public SpriteRenderer portrait;
+	public SpriteRenderer characterClass;
 
-	public void InitializeCharacter(CharacterInfo info) {
-		m_info = info;
+	private GUIText m_name;
+	private bool m_enabled;
+	private Person m_person;
+
+	public void InitializeCharacter(GUIText name, Person person) {
+		m_person = person;
+		m_person.charUIElement = this;
+		m_name = name;
 		m_enabled = true;
-		name.text = m_info.name;
+		m_name.text = m_person.desc;
+
+		Sprite[] textures = Resources.LoadAll<Sprite>("images/portraits");
+		string sprite = m_person.info.portrait;
+		foreach(Sprite s in textures) {
+			if(s.name == sprite) {
+				Debug.Log ("Setting sprite to " +sprite);
+				portrait.sprite = s;
+				break;
+			}
+		}
+		textures = Resources.LoadAll<Sprite>("images/portraits");
+		sprite = m_person.info.charClass;
+		foreach(Sprite s in textures) {
+			if(s.name == sprite) {
+				Debug.Log ("Setting sprite to " +sprite);
+				characterClass.sprite = s;
+				break;
+			}
+		}
+	}
+
+	public void AnimateAttack(float time) {
+		float totalTime = time;
+		int blinks = 3;
+		float blinkRate = totalTime / (float)(blinks * 2);
+		float current = 0.0f;
+		for(int i = 0; i < blinks; i++) {
+			iTween.ColorTo(gameObject, iTween.Hash("color", new Color(1.0f, 0.0f, 0.0f),
+			                                       "time", blinkRate, "delay", current));
+			current += blinkRate;
+			iTween.ColorTo(gameObject, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f),
+			                                       "time", blinkRate, "delay", current));
+			current += blinkRate;
+		}
 	}
 
 	public bool IsEnabled {
@@ -33,8 +72,11 @@ public class Character : MonoBehaviour {
 
 	private void UpdateVisibility() {
 		renderer.enabled = m_enabled;
-		if(name != null) {
-			name.enabled = m_enabled;
+		if(m_name != null) {
+			m_name.enabled = m_enabled;
+			m_name.text = m_person.desc;
 		}
+		portrait.enabled = m_enabled;
+		characterClass.enabled = m_enabled;
 	}
 }

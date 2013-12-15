@@ -16,6 +16,8 @@ public class Mob : MonoBehaviour {
 		m_sprite = GetComponent<SpriteRenderer>();
 	}
 
+	public int damage { get { return m_info.damage; } }
+
 	public int health {
 		get {
 			return m_health;
@@ -28,6 +30,21 @@ public class Mob : MonoBehaviour {
 		Debug.Log(m_info.name + " took " + damage + " damage (" + m_health + "/" + m_totalHealth + ")");
 		if(m_health < 0) m_health = 0;
 		UpdateHealthBars();
+	}
+
+	public void AnimateAttack(float time) {
+		float totalTime = time;
+		int blinks = 3;
+		float blinkRate = totalTime / (float)(blinks * 2);
+		float current = 0.0f;
+		for(int i = 0; i < blinks; i++) {
+			iTween.ColorTo(gameObject, iTween.Hash("color", new Color(1.0f, 0.0f, 0.0f),
+			                                       "time", blinkRate, "delay", current));
+			current += blinkRate;
+			iTween.ColorTo(gameObject, iTween.Hash("color", new Color(1.0f, 1.0f, 1.0f),
+			                                       "time", blinkRate, "delay", current));
+			current += blinkRate;
+		}
 	}
 
 	private void UpdateHealthBars() {

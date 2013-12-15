@@ -3,15 +3,21 @@
 	"cards" : [
 		{
 			"name" : "fire",
-			"sprite" : "fire"
+			"sprite" : "fire",
+			"type" : "basic",
+			"target" : "single"
 		},
 		{
 			"name" : "attack",
-			"sprite" : "attack"
+			"sprite" : "attack",
+			"type" : "basic",
+			"target" : "single"
 		},
 		{
 			"name" : "derp",
-			"sprite" : "derp"
+			"sprite" : "derp",
+			"type" : "basic",
+			"target" : "mass"
 		}
 	}
 }

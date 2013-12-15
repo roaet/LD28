@@ -3,26 +3,27 @@
 	"events": [
 		{ 
 			"sprite": "battle" ,
-			"mobCount": "2",
+			"mobCount": "3",
 			"mobs": [
 				"baby_blue_dragon", 
-				"baby_green_dragon"
+				"baby_green_dragon",
+				"baby_blue_dragon"
 			]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": ["baby_blue_dragon"]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": ["baby_blue_dragon"]
 		},
 		{ 
 			"sprite": "store", 
 			"mobCount": "0",
 			"isStore": "true"
-		},
-		{ 
-			"sprite": "battle" ,
-			"mobCount": "1",
-			"mobs": ["baby_blue_dragon"]
-		},
-		{ 
-			"sprite": "battle" ,
-			"mobCount": "1",
-			"mobs": ["baby_blue_dragon"]
 		},
 		{ 
 			"sprite": "battle" ,

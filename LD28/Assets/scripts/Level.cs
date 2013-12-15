@@ -2,12 +2,13 @@
 using System.Collections;
 
 public enum TurnState {
-	loading, draw, use, useAnimate, save, store
+	loading, draw, use, useAnimate, save, store, mobAnimate, characterAnimate, partyWipe
 }
 
 public class Level : MonoBehaviour {
 	public Storytrack storyTrack;
 	public PlayerHand playerHand;
+	public CharacterUI charController;
 	public GameObject saveGuide;
 	public GameObject useGuide;
 
@@ -38,6 +39,11 @@ public class Level : MonoBehaviour {
 			m_debugMobManager = new MobManager("mobs");
 			m_debugCharManager = new CharacterManager("characters");
 		}
+
+		CharacterInfo info = characterManager.GetCharacterByName("squire");
+		Person p = new Person(info);
+		characterManager.AddPersonToParty(p);
+
 		playerHand.cardManager = cardManager;
 		playerHand.level = this;
 		m_state = TurnState.draw;
@@ -117,14 +123,37 @@ public class Level : MonoBehaviour {
 
 	public void EndCardAnimation(CardInHand card) {
 		CardInfo cardInfo = card.info;
-		m_state = TurnState.save;
-		storyTrack.eventController.HandleCard(cardInfo);
-		storyTrack.CheckEventState();
-		
-		if(storyTrack.CheckIfSpawnActionAvailable()) {
-			storyTrack.SpawnElement();
+		m_state = TurnState.characterAnimate;
+		storyTrack.eventController.HandleCard(this, cardInfo, characterManager);
+	}
+
+	public void EndCharacterAnimation() {
+		bool completed = storyTrack.CheckEventState();
+		if(completed) {
+			m_state = TurnState.save;
+			if(storyTrack.CheckIfSpawnActionAvailable()) {
+				storyTrack.SpawnElement();
+			}
+			return;
+		}
+		m_state = TurnState.mobAnimate;
+		storyTrack.eventController.HandleMobs(this, characterManager);
+	}
+
+	private bool CheckPartyState() {
+		return characterManager.PartyAlive();
+	}
+
+	public void EndMobAnimation() {
+		bool partyStillAlive = CheckPartyState();
+		if(partyStillAlive) {
+			m_state = TurnState.save;
+		} else {
+			m_state = TurnState.partyWipe;
+			Debug.Log ("Party was wiped.. do soemthing");
 		}
 	}
+
 
 	private void UpdateGuides() {
 		saveGuide.renderer.enabled = m_state == TurnState.save;
@@ -149,6 +178,7 @@ public class Level : MonoBehaviour {
 			}
 		} break;
 		case TurnState.draw: { // auto draw to max hand size (3)
+			charController.UpdateParty(characterManager);
 			if(!drawing && playerHand.Handsize < 3) {
 				drawing = true;
 				StartCoroutine("DoDraw");

@@ -9,15 +9,19 @@ public class MobInfo {
 	private Color m_color;
 	private int m_health;
 	private bool m_hasHealth;
+	private int m_damage;
 	
 	public MobInfo(JSONNode mobJson) {
 		m_sprite = mobJson["sprite"];
 		m_name = mobJson["name"];
 		m_health = mobJson["health"].AsInt;
 		m_hasHealth = mobJson["hasHealth"].AsBool;
+		m_damage = mobJson["damage"].AsInt;
 		m_color = Color.white;
 
 	}
+
+	public int damage { get { return m_damage; } }
 
 	public bool hasHealth {
 		get {
