@@ -7,6 +7,7 @@ public class CardInHand : MonoBehaviour {
 	private Vector3 targetPosition;
 	private Vector3 restingPosition;
 	private bool isSelected;
+	private CardInfo m_info;
 
 	// Use this for initialization
 	void Start () {
@@ -28,6 +29,14 @@ public class CardInHand : MonoBehaviour {
 
 	void OnMouseDown() {
 		m_hand.CardWasClicked(this);
+	}
+
+	public CardInfo info {
+		get {
+			return m_info;
+		} set {
+			m_info = value;
+		}
 	}
 
 	public PlayerHand hand {

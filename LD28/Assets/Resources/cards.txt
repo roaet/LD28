@@ -1,0 +1,17 @@
+{
+	"cardCount" : "3",
+	"cards" : [
+		{
+			"name" : "fire",
+			"sprite" : "fire"
+		},
+		{
+			"name" : "attack",
+			"sprite" : "attack"
+		},
+		{
+			"name" : "derp",
+			"sprite" : "derp"
+		}
+	}
+}

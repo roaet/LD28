@@ -101,6 +101,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d1cb393e216465340b23975f22c0ac63, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentLevel: {fileID: 0}
+  cardFile: cards
 --- !u!4 &396062477
 Transform:
   m_ObjectHideFlags: 0

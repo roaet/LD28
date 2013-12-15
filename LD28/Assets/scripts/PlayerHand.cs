@@ -8,6 +8,8 @@ public class PlayerHand : MonoBehaviour {
 	public GameObject lastCard;
 	public GameObject cardConfirm;
 
+	private CardManager m_cardManager;
+
 	private List<CardInHand> m_cards;
 	private CardInHand focusedCard;
 	private CardInHand lastFocusedCard;
@@ -22,6 +24,14 @@ public class PlayerHand : MonoBehaviour {
 		m_cards = new List<CardInHand>();
 		lastFocusedCard = focusedCard = null;
 		change = false;
+	}
+
+	public CardManager cardManager {
+		set {
+			m_cardManager = value;
+		} get {
+			return m_cardManager;
+		}
 	}
 
 	public void CardWasClicked(CardInHand card) {
@@ -60,20 +70,19 @@ public class PlayerHand : MonoBehaviour {
 		return -1;
 	}
 
-	private CardInHand CreateCard(Vector3 position) {
+	private CardInHand CreateCard(Vector3 position, CardInfo info) {
 		//if(infos.Count <= 0) return null;
 		Vector3 target = GetCardSpawnPoint();
 		GameObject element = Instantiate(cardPrefab,
 		                                 target,
 		                                 Quaternion.identity) as GameObject;
+		Card c = element.GetComponent<Card>();
+		c.InitializeCard(info);
 		CardInHand card = element.GetComponent<CardInHand>();
+		card.info = info;
 		card.target = target;
 		iTween.Init(card.gameObject);
 		card.hand = this;
-		SpriteRenderer sprite = card.GetComponent<SpriteRenderer>();
-		sprite.color = new Color(Random.Range (0.0f, 1.0f),
-		                         Random.Range (0.0f, 1.0f),
-		                         Random.Range (0.0f, 1.0f));
 		return card;
 	}
 
@@ -104,7 +113,6 @@ public class PlayerHand : MonoBehaviour {
 	private void OrganizeCards() {
 		Vector3 a = firstCard.transform.position;
 		Vector3 b = lastCard.transform.position;
-		float time = 0.10f;
 		if(m_cards.Count == 0) return;
 		
 		float baseZed = -1.0f;
@@ -143,9 +151,7 @@ public class PlayerHand : MonoBehaviour {
 	
 	private void PushCardsAwayFrom(CardInHand card) {
 		int idx = FindIndexOfCard(card);
-		Vector3 leper = card.resting;
 		float popDistance = 0.5f;
-		float time = 0.10f;
 		
 		float baseZed = -5.0f;
 		for(int i = 0; i < m_cards.Count; i++) {
@@ -218,33 +224,47 @@ public class PlayerHand : MonoBehaviour {
 
 	public void ConfirmSelection() {
 		Destroy(confirmObject);
+		m_cardManager.deck.PutCardIntoDiscard(selectedCard.info);
 		Destroy(selectedCard.gameObject);
 		selectedCard.selected = false;
 		selectedCard = null;
 
 	}
+
+	public void DrawCard() {
+		CardInfo info = m_cardManager.deck.DrawCardIntoHand();
+		if(info == null) {
+			Debug.Log ("Failed to draw");
+			return;
+		}
+		CardInHand card = CreateCard(transform.position, info);
+		m_cards.Add (card);
+		change = true;
+	}
+
+	public void Discard(CardInHand card) {
+		m_cardManager.deck.PutCardIntoDiscard(card.info);
+		Destroy(card.gameObject);
+	}
+
+	public void DiscardAllBut(CardInHand save) {
+		foreach(CardInHand card in m_cards) {
+			if(save == card) continue;
+			Discard(card);
+		}
+		m_cards.Clear();
+		m_cards.Add(save);
+		change = true;
+	}
 	
 	// Update is called once per frame
 	void Update () {
 		if(Input.GetKeyDown(KeyCode.D)) {
-			CardInHand card = CreateCard(transform.position);
-			m_cards.Add (card);
-			change = true;
+			DrawCard();
 		}
-		if(selectedCard != null && Input.GetKeyDown(KeyCode.Delete)) {
-			CancelSelection();
-		}
-		if(Input.GetKeyDown(KeyCode.Alpha1)) {
-			RemoveCardAt(0);
-			change = true;
-		}
-		if(Input.GetKeyDown(KeyCode.Alpha2)) {
-			RemoveCardAt(m_cards.Count/2);
-			change = true;
-		}
-		if(Input.GetKeyDown(KeyCode.Alpha3)) {
-			RemoveCardAt(m_cards.Count-1);
-			change = true;
+		if(Input.GetKeyDown (KeyCode.Alpha1)) {
+			CardInHand save = m_cards[0];
+			DiscardAllBut(save);
 		}
 		if(change) {
 			OrganizeCards();
