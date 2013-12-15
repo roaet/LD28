@@ -3,11 +3,15 @@
 	"mobs" : [
 		{
 			"name" : "baby_blue_dragon",
-			"sprite" : "dragon_0"
+			"sprite" : "dragon_0",
+			"health" : "10",
+			"hasHealth": "true"
 		},
 		{
 			"name" : "baby_green_dragon",
-			"sprite" : "dragon_3"
+			"sprite" : "dragon_3",
+			"health" : "10",
+			"hasHealth": "true"
 		}
 	}
 }

@@ -21,12 +21,14 @@ public class PlayerHand : MonoBehaviour {
 	private int selectedCardIndex;
 	private GameObject confirmObject;
 	private bool change;
+	private bool confirmSelection;
 
 	// Use this for initialization
 	void Start () {
 		m_cards = new List<CardInHand>();
 		lastFocusedCard = focusedCard = null;
 		change = false;
+		confirmSelection = false;
 	}
 
 	public int Handsize {
@@ -197,17 +199,21 @@ public class PlayerHand : MonoBehaviour {
 	}
 
 	private void SelectACard(CardInHand card) {
-		selectedCard = card;
 		int idx = FindIndexOfCard(card);
+		selectedCard = card;
 		selectedCardIndex = idx;
-		m_cards.RemoveAt(idx);
-		TweenTo (card, new Vector3(0.0f, 0.0f, -6.0f));
-		iTween.ScaleTo(card.gameObject, new Vector3(2.0f, 2.0f, 1.0f), 1.0f);
-		change = true;
 		selectedCard.selected = true;
+		m_cards.RemoveAt(idx);
+		change = true;
 		lastFocusedCard = card;
 		focusedCard = null;
-		BringUpConfirmation();
+		if(confirmSelection) {
+			TweenTo (card, new Vector3(0.0f, 0.0f, -6.0f));
+			iTween.ScaleTo(card.gameObject, new Vector3(2.0f, 2.0f, 1.0f), 1.0f);
+			BringUpConfirmation();
+		} else {
+			ConfirmSelection();
+		}
 	}
 
 	private void BringUpConfirmation() {

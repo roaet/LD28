@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum TurnState {
-	loading, draw, use, save
+	loading, draw, use, save, store
 }
 
 public class Level : MonoBehaviour {
@@ -15,10 +15,12 @@ public class Level : MonoBehaviour {
 	private MobManager m_debugMobManager;
 	private TurnState m_state;
 	private bool drawing;
+	private bool storeQueued;
 	
 	void Awake() {
 		drawing = false;
 		storyTrack.level = this;
+		storeQueued = false;
 	}
 
 	public void LoadLevel(string level) {
@@ -35,11 +37,26 @@ public class Level : MonoBehaviour {
 		m_state = TurnState.draw;
 	}
 
+	public void QueueStore() {
+		storeQueued = true;
+	}
+
+	public void BringUpStore() {
+		m_state = TurnState.store;
+		storeQueued = false;
+	}
+
 	public bool CardSelected(CardInHand card) {
 		CardInfo cardInfo = card.info;
 		if(m_state == TurnState.use) {
 			Debug.Log (cardInfo.name + " was used!");
 			m_state = TurnState.save;
+			storyTrack.eventController.HandleCard(cardInfo);
+			storyTrack.CheckEventState();
+			
+			if(storyTrack.CheckIfSpawnActionAvailable()) {
+				storyTrack.SpawnElement();
+			}
 			return true;
 		}
 		if(m_state == TurnState.save) {
@@ -92,16 +109,26 @@ public class Level : MonoBehaviour {
 			LoadLevel ("test");
 		}
 		switch(m_state) {
-		case TurnState.draw: { // auto draw to max hand size (3)
-			if(Input.GetKeyDown(KeyCode.D)) {
-				playerHand.DrawCard();
+		case TurnState.store: {
+			if(Input.GetKeyDown(KeyCode.Escape)) {
+				storyTrack.EventCompleted();
+				if(storyTrack.CheckIfSpawnActionAvailable()) {
+					storyTrack.SpawnElement();
+				}
+				m_state = TurnState.draw;
 			}
+		} break;
+		case TurnState.draw: { // auto draw to max hand size (3)
 			if(!drawing && playerHand.Handsize < 3) {
 				drawing = true;
 				StartCoroutine("DoDraw");
 			}
 			if(playerHand.Handsize >= 3) {
-				m_state = TurnState.use;
+				if(storeQueued) {
+					BringUpStore();
+				} else {
+					m_state = TurnState.use;
+				}
 			}
 		} break;
 		case TurnState.use: { // wait for player to select 1 for use
@@ -110,13 +137,6 @@ public class Level : MonoBehaviour {
 		case TurnState.save: { // wait for player to select 1 for save and discard
 			
 		} break;
-		}
-		// stuff
-		if(Input.GetKeyDown (KeyCode.Delete)) {
-			storyTrack.PopBottom();
-			if(storyTrack.CheckIfSpawnActionAvailable()) {
-				storyTrack.SpawnElement();
-			}
 		}
 	}
 }

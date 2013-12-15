@@ -45,9 +45,28 @@ public class Event : MonoBehaviour {
 		return mob;
 	}
 
-	void Update() {
-		if(Input.GetKeyDown(KeyCode.PageDown)) {
-			m_st.EventCompleted();
+	public void HandleCard(CardInfo card) {
+		foreach(Mob mob in m_mobs) {
+			mob.TakeDamage(5);
 		}
+	}
+
+	public int CheckMobStates() {
+		List<Mob> aliveMobs = new List<Mob>();
+		List<Mob> deadMobs = new List<Mob>();
+		foreach(Mob mob in m_mobs) {
+			if(mob.health > 0) {
+				aliveMobs.Add (mob);
+			} else {
+				deadMobs.Add (mob);
+			}
+		}
+		foreach(Mob mob in deadMobs) {
+			Destroy(mob.gameObject);
+		}
+		deadMobs.Clear();
+		m_mobs.Clear();
+		m_mobs = aliveMobs;
+		return m_mobs.Count;
 	}
 }

@@ -99,7 +99,10 @@ public class Storytrack : MonoBehaviour {
 
 	public void UpdateEventScreen() {
 		if(elements.Count == 0) return;
-		StartCoroutine("WaitForBottomToSleep");
+		EventInfo info = GetActiveElement().eventInfo;
+		if(info.isStore) {
+			m_level.QueueStore();
+		}
 		eventController.LoadEventInfo(m_level.mobManager, this, GetActiveElement().eventInfo);
 	}
 
@@ -109,6 +112,12 @@ public class Storytrack : MonoBehaviour {
 		Destroy (element.gameObject);
 		elements.RemoveAt(0);
 		UpdateEventScreen();
+	}
+
+	public void CheckEventState() {
+		int mobsAlive = eventController.CheckMobStates();
+		Debug.Log ("There are " + mobsAlive + " mobs alive");
+		if(mobsAlive == 0)	EventCompleted();
 	}
 
 	public void EventCompleted() {
