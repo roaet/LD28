@@ -5,6 +5,11 @@ using System.Collections.Generic;
 public class Event : MonoBehaviour {
 
 	public GameObject mobPrefab;
+	public GameObject spawn1;
+	public GameObject spawn2;
+	public GameObject spawn3;
+	public GameObject spawn1a;
+	public GameObject spawn2a;
 
 	private Storytrack m_st;
 	private List<Mob> m_mobs;
@@ -18,12 +23,28 @@ public class Event : MonoBehaviour {
 		ClearMobs();
 		m_st = storyTrack;
 		m_info = info;
-		Debug.Log ("Loaded info with " + m_info.mobs.Count + " mobs");
-		for(int i = 0; i < m_info.mobs.Count; i++) {
-			string mobName = m_info.mobs[i];
+		foreach(string mobName in m_info.mobs) {
 			MobInfo mobInfo = mobManager.GetMobByName(mobName);
 			Mob mob = CreateMob(mobInfo, transform.position);
 			m_mobs.Add(mob);
+		}
+		MoveMobsToSpawns();
+	}
+
+	private void MoveMobsToSpawns() {
+		if(m_mobs.Count == 0) return;
+		// More jank. Fix this
+		if(m_mobs.Count == 1) {
+			m_mobs[0].transform.position = spawn2.transform.position;	
+		}
+		if(m_mobs.Count == 2) {
+			m_mobs[0].transform.position = spawn1a.transform.position;	
+			m_mobs[1].transform.position = spawn2a.transform.position;	
+		}
+		if(m_mobs.Count == 3) {
+			m_mobs[0].transform.position = spawn1.transform.position;	
+			m_mobs[1].transform.position = spawn2.transform.position;	
+			m_mobs[2].transform.position = spawn3.transform.position;	
 		}
 	}
 
@@ -36,7 +57,6 @@ public class Event : MonoBehaviour {
 
 	private Mob CreateMob(MobInfo info, Vector3 position) {
 		if(m_info.mobs.Count <= 0) return null;
-		m_info.mobs.RemoveAt (0);
 		GameObject element = Instantiate(mobPrefab,
 		                                 position,
 		                                 Quaternion.identity) as GameObject;

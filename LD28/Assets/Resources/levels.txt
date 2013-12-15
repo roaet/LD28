@@ -3,8 +3,11 @@
 	"events": [
 		{ 
 			"sprite": "battle" ,
-			"mobCount": "1",
-			"mobs": ["baby_blue_dragon"]
+			"mobCount": "2",
+			"mobs": [
+				"baby_blue_dragon", 
+				"baby_green_dragon"
+			]
 		},
 		{ 
 			"sprite": "store", 
