@@ -1,6 +1,9 @@
 {
 	"charCount" : "1",
 	"chars" : [
-		{ "name" : "squire", "portrait": "knight", "class": "fighter", "damage" : "1", "hp" : "10"}
+		{ 
+			"name" : "squire", "portrait": "knight", "class": "fighter", "damage" : "1", "hp" : "10",
+			"tip" : "Basic low damange fighter."
+		}
 	]
 }

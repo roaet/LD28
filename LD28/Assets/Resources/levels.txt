@@ -15,6 +15,22 @@
 			"isStore": "true"
 		},
 		{ 
+			"sprite": "inn", 
+			"isInn" : "true",
+			"mobCount": "1",
+			"mobs": [
+				"squire"
+			]
+		},
+		{ 
+			"sprite": "inn", 
+			"isInn" : "true",
+			"mobCount": "1",
+			"mobs": [
+				"squire"
+			]
+		},
+		{ 
 			"sprite": "battle" ,
 			"mobCount": "3",
 			"mobs": [

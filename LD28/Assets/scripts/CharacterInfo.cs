@@ -9,6 +9,7 @@ public class CharacterInfo {
 	private string m_class;
 	private int m_damage;
 	private int m_health;
+	private string m_tip;
 
 	public CharacterInfo(JSONNode charJson) {
 		m_name = charJson["name"];
@@ -16,10 +17,12 @@ public class CharacterInfo {
 		m_class = charJson["class"];
 		m_damage = charJson["damage"].AsInt;
 		m_health = charJson["hp"].AsInt;
+		m_tip = charJson["tip"];
 	}
 
 	public int damage { get { return m_damage; } }
 	public int health { get { return m_health; } }
+	public string tip { get { return m_tip; } }
 
 	public string name {
 		get {

@@ -40,6 +40,12 @@ public class CharacterManager {
 		return true;
 	}
 
+	public bool AddPersonToPartyAt(Person p, int index) {
+		Debug.Log ("Replacing at " + index);
+		m_party[index] = p;
+		return true;
+	}
+
 
 	public bool IsPartyFullHealth() {
 		foreach(Person p in party) {

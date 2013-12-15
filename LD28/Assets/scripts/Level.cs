@@ -37,6 +37,18 @@ public class Level : MonoBehaviour {
 		m_gold = 15;
 	}
 
+	public void RecruitCharacter(CharacterInfo info) {
+		Person p = new Person(info);
+		characterManager.AddPersonToParty(p);
+	}
+
+	
+	
+	public void ReplaceCharacter(int index, CharacterInfo info) {
+		Person p = new Person(info);
+		characterManager.AddPersonToPartyAt(p, index);
+	}
+
 	public void UsePotion() {
 		if(m_gold < potionCost || characterManager.IsPartyFullHealth()) {
 			return;
@@ -203,7 +215,17 @@ public class Level : MonoBehaviour {
 	public void BringUpInn() {
 		m_state = TurnState.inn;
 		innQueued = false;
+		Vector3 curPosition = inn.transform.position;
+		curPosition.y = 0.1f;
 		inn.InitializeInn(storyTrack.GetActiveElement().eventInfo);
+		iTween.MoveTo (inn.gameObject, iTween.Hash("position", curPosition,
+		                                             "easetype", iTween.EaseType.easeOutBounce,
+		                                             "oncompletetarget", this.gameObject,
+		                                             "oncomplete", "InnOpened"));
+	}
+
+	public void InnOpened() {
+
 	}
 	
 	public void InnClosed() {
@@ -216,7 +238,7 @@ public class Level : MonoBehaviour {
 	
 	public void CloseInn() {
 		Vector3 curPosition = inn.transform.position;
-		curPosition.y = 7.0f;
+		curPosition.y = 10.0f;
 		iTween.MoveTo (inn.gameObject, iTween.Hash("position", curPosition,
 		                                           "oncompletetarget", this.gameObject,
 		                                           "oncomplete", "InnClosed"));
