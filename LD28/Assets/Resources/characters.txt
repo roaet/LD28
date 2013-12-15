@@ -1,0 +1,6 @@
+{
+	"charCount" : "1",
+	"chars" : [
+		{ "name" : "herp" }
+	]
+}

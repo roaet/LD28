@@ -79,8 +79,8 @@ public class PlayerHand : MonoBehaviour {
 	private IEnumerator AnimateCardUseHelper(CardInHand card) {
 		Debug.Log ("Animating");
 		level.StartCardAnimation();
-		iTween.FadeTo(card.gameObject, 0.0f, 0.5f);
-		iTween.MoveBy (card.gameObject, new Vector3(0.0f, -5.0f, 0.0f), 0.5f);
+		iTween.FadeTo(card.gameObject, 0.0f, 1.0f);
+		iTween.MoveBy (card.gameObject, new Vector3(0.0f, -2.0f, 0.0f), 1.0f);
 		yield return new WaitForSeconds(1.0f);
 		
 		m_cardManager.deck.PutCardIntoDiscard(card.info);

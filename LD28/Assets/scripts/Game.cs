@@ -8,13 +8,16 @@ public class Game : MonoBehaviour {
 
 	public string cardFile = "cards";
 	public string mobFile = "mobs";
+	public string characterFile = "characters";
 
 	private CardManager m_cardManager;
 	private MobManager m_mobManager;
+	private CharacterManager m_characterManager;
 
 	void Awake() {
 		m_cardManager = new CardManager(cardFile);
 		m_mobManager = new MobManager(mobFile);
+		m_characterManager = new CharacterManager(characterFile);
 		DontDestroyOnLoad(gameObject);
 	}
 
@@ -27,6 +30,12 @@ public class Game : MonoBehaviour {
 	public MobManager mobManager{
 		get {
 			return m_mobManager;
+		}
+	}
+	
+	public CharacterManager characterManager{
+		get {
+			return m_characterManager;
 		}
 	}
 	

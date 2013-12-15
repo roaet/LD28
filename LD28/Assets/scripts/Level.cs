@@ -15,6 +15,7 @@ public class Level : MonoBehaviour {
 	private Game m_game;
 	private CardManager m_debugCardManager;
 	private MobManager m_debugMobManager;
+	private CharacterManager m_debugCharManager;
 	private TurnState m_state;
 	private bool drawing;
 	private bool storeQueued;
@@ -28,13 +29,14 @@ public class Level : MonoBehaviour {
 	}
 
 	public void LoadLevel(string level) {
-		int loadedTiles = storyTrack.LoadStoryTrackJSON("test");
+		int loadedTiles = storyTrack.LoadStoryTrackJSON(level);
 		if(loadedTiles > 0) {
 			storyTrack.Display();
 		}
 		if(m_debug) {
 			m_debugCardManager = new CardManager("cards");
 			m_debugMobManager = new MobManager("mobs");
+			m_debugCharManager = new CharacterManager("characters");
 		}
 		playerHand.cardManager = cardManager;
 		playerHand.level = this;
@@ -86,6 +88,14 @@ public class Level : MonoBehaviour {
 			return m_debugMobManager;
 		}
 	}
+	
+	public CharacterManager characterManager {
+		get {
+			if(m_game != null) return m_game.characterManager;
+			return m_debugCharManager;
+		}
+	}
+
 
 	public Game game {
 		get {
