@@ -11,6 +11,7 @@ public class Mob : MonoBehaviour {
 	private int m_health;
 	private int m_totalHealth;
 	private bool m_hasHealth;
+	private Event m_eventController;
 
 	void Awake() {
 		m_sprite = GetComponent<SpriteRenderer>();
@@ -24,11 +25,18 @@ public class Mob : MonoBehaviour {
 		}
 	}
 
+	void OnMouseDown() {
+		m_eventController.MobClicked(this);
+	}
+
 	public void TakeDamage(int damage) {
 		if(!m_hasHealth) return;
 		m_health -= damage;
 		Debug.Log(m_info.name + " took " + damage + " damage (" + m_health + "/" + m_totalHealth + ")");
 		if(m_health < 0) m_health = 0;
+		if(m_health == 0) {
+			m_eventController.MobDying(this);
+		}
 		UpdateHealthBars();
 	}
 
@@ -53,8 +61,9 @@ public class Mob : MonoBehaviour {
 		healthBarFG.transform.localScale = scale;
 	}
 
-	public void LoadInfo(MobInfo info) {
+	public void LoadInfo(Event eventController, MobInfo info) {
 		m_info = info;
+		m_eventController = eventController;
 		Sprite[] textures = Resources.LoadAll<Sprite>("images/mobs");
 		string sprite = m_info.sprite;
 		foreach(Sprite s in textures) {

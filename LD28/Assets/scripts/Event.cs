@@ -10,13 +10,42 @@ public class Event : MonoBehaviour {
 	public GameObject spawn3;
 	public GameObject spawn1a;
 	public GameObject spawn2a;
+	public SpriteRenderer targetSprite;
 
 	private Storytrack m_st;
 	private List<Mob> m_mobs;
 	private EventInfo m_info;
 
+	private Mob selectedMob;
+
 	void Awake() {
 		m_mobs = new List<Mob>();
+		targetSprite.enabled = false;
+	}
+
+	public void MobClicked(Mob mob) {
+		if(selectedMob == mob) selectedMob = null;
+		else selectedMob = mob;
+	}
+
+	public void MobDying(Mob mob) {
+		if(selectedMob == mob) selectedMob = null;
+	}
+
+	private void UpdateTarget() {
+		if(selectedMob == null) {
+			targetSprite.enabled = false;
+			return;
+		}
+		targetSprite.enabled = true;
+		float height = selectedMob.renderer.bounds.extents.y;
+		Vector3 newPosition = selectedMob.transform.position;
+		newPosition.y += height;
+		targetSprite.transform.position = newPosition;
+	}
+
+	void Update() {
+		UpdateTarget();
 	}
 
 	public void LoadEventInfo(MobManager mobManager, Storytrack storyTrack, EventInfo info) {
@@ -65,7 +94,7 @@ public class Event : MonoBehaviour {
 		                                 position,
 		                                 Quaternion.identity) as GameObject;
 		Mob mob = element.GetComponent<Mob>();
-		mob.LoadInfo(info);
+		mob.LoadInfo(this, info);
 		return mob;
 	}
 
@@ -139,8 +168,10 @@ public class Event : MonoBehaviour {
 	}
 
 	private void DamageRandomMob(int damage) {
-		int idx = Random.Range (0, m_mobs.Count);
-		m_mobs[idx].TakeDamage(damage);
+		if(selectedMob == null) {
+			int idx = Random.Range (0, m_mobs.Count);
+			m_mobs[idx].TakeDamage(damage);
+		} selectedMob.TakeDamage(damage);
 	}
 
 	public int CheckMobStates() {
