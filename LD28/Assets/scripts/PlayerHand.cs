@@ -8,6 +8,9 @@ public class PlayerHand : MonoBehaviour {
 	public GameObject lastCard;
 	public GameObject cardConfirm;
 
+	[HideInInspector]
+	public Level level;
+
 	private CardManager m_cardManager;
 
 	private List<CardInHand> m_cards;
@@ -24,6 +27,12 @@ public class PlayerHand : MonoBehaviour {
 		m_cards = new List<CardInHand>();
 		lastFocusedCard = focusedCard = null;
 		change = false;
+	}
+
+	public int Handsize {
+		get {
+			return m_cards.Count;
+		}
 	}
 
 	public CardManager cardManager {
@@ -224,11 +233,16 @@ public class PlayerHand : MonoBehaviour {
 
 	public void ConfirmSelection() {
 		Destroy(confirmObject);
-		m_cardManager.deck.PutCardIntoDiscard(selectedCard.info);
-		Destroy(selectedCard.gameObject);
+		bool doDestroy = level.CardSelected(selectedCard);
+		if(doDestroy) {
+			m_cardManager.deck.PutCardIntoDiscard(selectedCard.info);
+			Destroy (selectedCard.gameObject);
+		}
 		selectedCard.selected = false;
 		selectedCard = null;
+	}
 
+	public void DestroyCard(CardInHand card) {
 	}
 
 	public void DrawCard() {
@@ -247,6 +261,12 @@ public class PlayerHand : MonoBehaviour {
 		Destroy(card.gameObject);
 	}
 
+	public void PutCardBackIntoHand(CardInHand card) {
+		m_cards.Add(card);
+		iTween.ScaleTo(card.gameObject, new Vector3(1.0f, 1.0f, 1.0f), 1.0f);
+		m_cards.Add (card);
+	}
+
 	public void DiscardAllBut(CardInHand save) {
 		foreach(CardInHand card in m_cards) {
 			if(save == card) continue;
@@ -259,9 +279,6 @@ public class PlayerHand : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown(KeyCode.D)) {
-			DrawCard();
-		}
 		if(Input.GetKeyDown (KeyCode.Alpha1)) {
 			CardInHand save = m_cards[0];
 			DiscardAllBut(save);

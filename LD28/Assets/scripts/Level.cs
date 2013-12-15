@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+public enum TurnState {
+	draw, use, save
+}
+
 public class Level : MonoBehaviour {
 	public Storytrack storyTrack;
 	public PlayerHand playerHand;
@@ -8,8 +12,11 @@ public class Level : MonoBehaviour {
 	private bool m_debug = true;
 	private Game m_game;
 	private CardManager m_debugCardManager;
+	private TurnState m_state;
+	private bool drawing;
 	
 	void Awake() {
+		drawing = false;
 	}
 
 	public void LoadLevel(string level) {
@@ -21,6 +28,24 @@ public class Level : MonoBehaviour {
 			m_debugCardManager = new CardManager("cards");
 		}
 		playerHand.cardManager = cardManager;
+		playerHand.level = this;
+	}
+
+	public bool CardSelected(CardInHand card) {
+		CardInfo cardInfo = card.info;
+		if(m_state == TurnState.use) {
+			Debug.Log (cardInfo.name + " was used!");
+			m_state = TurnState.save;
+			return true;
+		}
+		if(m_state == TurnState.save) {
+			Debug.Log (cardInfo.name + " was saved!");
+			playerHand.PutCardBackIntoHand(card);
+			playerHand.DiscardAllBut(card);
+			m_state = TurnState.draw;
+			return false;
+		}
+		return false;
 	}
 
 	public bool debug {
@@ -43,9 +68,36 @@ public class Level : MonoBehaviour {
 			m_game = value;
 		}
 	}
+
+	public IEnumerator DoDraw() {
+		playerHand.DrawCard();
+		yield return new WaitForSeconds(0.5f);
+		drawing = false;
+	}
 	
 	// Update is called once per frame
 	void Update () {
+		switch(m_state) {
+		case TurnState.draw: { // auto draw to max hand size (3)
+			if(Input.GetKeyDown(KeyCode.D)) {
+				playerHand.DrawCard();
+			}
+			if(!drawing && playerHand.Handsize < 3) {
+				drawing = true;
+				StartCoroutine("DoDraw");
+			}
+			if(playerHand.Handsize >= 3) {
+				m_state = TurnState.use;
+			}
+		} break;
+		case TurnState.use: { // wait for player to select 1 for use
+
+		} break;
+		case TurnState.save: { // wait for player to select 1 for save and discard
+			
+		} break;
+		}
+		// stuff
 		if(Input.GetKeyDown (KeyCode.Delete)) {
 			storyTrack.PopBottom();
 			if(storyTrack.CheckIfSpawnActionAvailable()) {
