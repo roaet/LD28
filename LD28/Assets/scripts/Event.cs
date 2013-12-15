@@ -143,17 +143,16 @@ public class Event : MonoBehaviour {
 
 	private IEnumerator DoCharActions(CharActionData data) {
 		bool doMassAttack = data.card.target == "mass";
-		if(data.card.type == "basic") {
-			foreach(Person p in data.chars.party) {
-				int damage = p.damage;
-				float time = 0.25f;
-				p.charUIElement.AnimateAttack(time);
-				yield return new WaitForSeconds(time);
-				if(doMassAttack) DamageAllMobs(damage);
-				else DamageRandomMob(damage);
-				int monstersLeft = CheckMobStates(data.level);
-				if(monstersLeft == 0) break;
-			}
+		foreach(Person p in data.chars.party) {
+			if(data.card.type != "basic" && data.card.type != p.info.charClass) continue;
+			int damage = p.damage;
+			float time = 0.25f;
+			p.charUIElement.AnimateAttack(time);
+			yield return new WaitForSeconds(time);
+			if(doMassAttack) DamageAllMobs(damage);
+			else DamageRandomMob(damage);
+			int monstersLeft = CheckMobStates(data.level);
+			if(monstersLeft == 0) break;
 		}
 		data.level.EndCharacterAnimation();
 

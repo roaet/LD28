@@ -6,9 +6,11 @@ public class STElementInfo {
 	private string m_spriteName;
 	private Color m_spriteColor;
 	private EventInfo m_eventInfo;
+	private bool m_alwaysSeen;
 
 	public STElementInfo(JSONNode stJson) {
 		string spriteName = stJson["sprite"];
+		m_alwaysSeen = stJson["doShow"].AsBool;
 		JSONNode color = stJson["color"];
 		Color col = Color.white;
 		if(color != null) {
@@ -18,6 +20,8 @@ public class STElementInfo {
 		m_spriteColor = col;
 		m_eventInfo = new EventInfo(stJson);
 	}
+
+	public bool alwaysSeen { get { return m_alwaysSeen; } }
 
 	public EventInfo eventInfo {
 		get {

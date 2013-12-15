@@ -1,35 +1,6 @@
 {
-	"eventCount": "8",
+	"eventCount": "6",
 	"events": [
-		{ 
-			"sprite": "inn", 
-			"isInn" : "true",
-			"mobCount": "1",
-			"mobs": [
-				"squire"
-			]
-		},
-		{ 
-			"sprite": "store", 
-			"mobCount": "0",
-			"isStore": "true"
-		},
-		{ 
-			"sprite": "inn", 
-			"isInn" : "true",
-			"mobCount": "1",
-			"mobs": [
-				"squire"
-			]
-		},
-		{ 
-			"sprite": "inn", 
-			"isInn" : "true",
-			"mobCount": "1",
-			"mobs": [
-				"squire"
-			]
-		},
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "3",
@@ -59,6 +30,6 @@
 			"mobCount": "1",
 			"mobs": ["baby_blue_dragon"]
 		},
-		{ "sprite": "exit" }
+		{ "sprite": "exit", "doShow" : "true" }
 	]
 }

@@ -16,6 +16,7 @@ public class Level : MonoBehaviour {
 	public Inn inn;
 	public int potionCost = 2;
 	public int potionPower = 4;
+	public SpriteRenderer slain;
 
 	private bool m_debug = true;
 	private Game m_game;
@@ -34,7 +35,8 @@ public class Level : MonoBehaviour {
 		innQueued = storeQueued = false;
 		saveGuide.renderer.enabled = false;
 		useGuide.renderer.enabled = false;
-		m_gold = 15;
+		slain.renderer.enabled = false;
+		m_gold = 0;
 	}
 
 	public void RecruitCharacter(CharacterInfo info) {
@@ -81,7 +83,12 @@ public class Level : MonoBehaviour {
 		if(m_gold < 0) m_gold = 0;
 	}
 
+	public void ResetAllTheThings() {
+		storyTrack.ResetAllTheThings();
+	}
+
 	public void LoadLevel(string level) {
+		ResetAllTheThings();
 		int loadedTiles = storyTrack.LoadStoryTrackJSON(level);
 		if(loadedTiles > 0) {
 			storyTrack.Display();
@@ -94,9 +101,7 @@ public class Level : MonoBehaviour {
 
 		CharacterInfo info = characterManager.GetCharacterByName("squire");
 		Person p = new Person(info);
-		Person q = new Person(info);
 		characterManager.AddPersonToParty(p);
-		characterManager.AddPersonToParty(q);
 
 		playerHand.cardManager = cardManager;
 		playerHand.level = this;
@@ -195,6 +200,7 @@ public class Level : MonoBehaviour {
 			m_state = TurnState.save;
 		} else {
 			m_state = TurnState.partyWipe;
+			slain.renderer.enabled = true;
 			Debug.Log ("Party was wiped.. do soemthing");
 		}
 	}
@@ -285,9 +291,19 @@ public class Level : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		if(m_state == TurnState.partyWipe) {
+			if(Input.anyKeyDown || Input.GetMouseButtonDown(0)) {
+				Destroy(m_game.gameObject);
+				Application.LoadLevel("initialscene");
+			}
+			return;
+		}
 		UpdateGuides();
 		if(m_debug && m_state == TurnState.loading) {
 			LoadLevel ("test");
+		}
+		if(m_state != TurnState.loading) {
+			storyTrack.AdjustVisibility(1);
 		}
 		switch(m_state) {
 		case TurnState.store: {

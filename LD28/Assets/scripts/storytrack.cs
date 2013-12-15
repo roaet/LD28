@@ -130,11 +130,25 @@ public class Storytrack : MonoBehaviour {
 		PopBottom();
 	}
 
+	public void ResetAllTheThings() {
+		ClearElements();
+		elements = new List<STElement>();
+		infos = new List<STElementInfo>();
+	}
+
 	public void ClearElements() {
 		foreach(STElement element in elements) {
 			Destroy(element.gameObject);
 		}
 		elements.Clear();
+	}
+
+	public void AdjustVisibility(int level) {
+		if(elements.Count == 0) return;
+		elements[0].ToggleVisibility(true);
+		for(int i = 1; i < elements.Count && i < level+1; i++) {
+			elements[i].ToggleVisibility(true);
+		}
 	}
 	
 	private IEnumerator InitialLoad() {

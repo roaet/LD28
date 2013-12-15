@@ -14,7 +14,7 @@
 			"sprite" : "dragon_3",
 			"health" : "1",
 			"hasHealth": "true",
-			"damage": "2",
+			"damage": "100",
 			"gold" : "2"
 		}
 	}

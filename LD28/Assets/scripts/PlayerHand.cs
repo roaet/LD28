@@ -309,10 +309,6 @@ public class PlayerHand : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if(Input.GetKeyDown (KeyCode.Alpha1)) {
-			CardInHand save = m_cards[0];
-			DiscardAllBut(save);
-		}
 		if(change) {
 			OrganizeCards();
 		}

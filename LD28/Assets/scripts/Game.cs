@@ -15,9 +15,6 @@ public class Game : MonoBehaviour {
 	private CharacterManager m_characterManager;
 
 	void Awake() {
-		m_cardManager = new CardManager(cardFile);
-		m_mobManager = new MobManager(mobFile);
-		m_characterManager = new CharacterManager(characterFile);
 		DontDestroyOnLoad(gameObject);
 	}
 
@@ -38,18 +35,18 @@ public class Game : MonoBehaviour {
 			return m_characterManager;
 		}
 	}
-	
-	// Update is called once per frame
-	void Update () {
-		if(Input.GetKeyDown(KeyCode.PageUp)) {
-			Application.LoadLevel("game");
-		}
+
+
+	public void LoadGame() {
+		m_cardManager = new CardManager(cardFile);
+		m_mobManager = new MobManager(mobFile);
+		m_characterManager = new CharacterManager(characterFile);
+		Application.LoadLevel("game");
 	}
 
 	void OnLevelWasLoaded() {
 		currentLevel = GameObject.FindObjectOfType<Level>();
 		if(currentLevel == null) {
-			Debug.LogError("Could not find level object in scene");
 			return;
 		}
 		currentLevel.game = this;
