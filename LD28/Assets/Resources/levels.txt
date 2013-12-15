@@ -7,8 +7,7 @@
 			"mobs": ["baby_blue_dragon"]
 		},
 		{ 
-			"sprite": "inn", 
-			"color": {"r": "1.0", "g": "0.0", "b": "0.0"},
+			"sprite": "store", 
 			"mobCount": "0",
 			"isStore": "true"
 		},

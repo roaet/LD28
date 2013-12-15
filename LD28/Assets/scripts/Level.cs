@@ -2,12 +2,14 @@
 using System.Collections;
 
 public enum TurnState {
-	loading, draw, use, save, store
+	loading, draw, use, useAnimate, save, store
 }
 
 public class Level : MonoBehaviour {
 	public Storytrack storyTrack;
 	public PlayerHand playerHand;
+	public GameObject saveGuide;
+	public GameObject useGuide;
 
 	private bool m_debug = true;
 	private Game m_game;
@@ -21,6 +23,8 @@ public class Level : MonoBehaviour {
 		drawing = false;
 		storyTrack.level = this;
 		storeQueued = false;
+		saveGuide.renderer.enabled = false;
+		useGuide.renderer.enabled = false;
 	}
 
 	public void LoadLevel(string level) {
@@ -50,13 +54,7 @@ public class Level : MonoBehaviour {
 		CardInfo cardInfo = card.info;
 		if(m_state == TurnState.use) {
 			Debug.Log (cardInfo.name + " was used!");
-			m_state = TurnState.save;
-			storyTrack.eventController.HandleCard(cardInfo);
-			storyTrack.CheckEventState();
-			
-			if(storyTrack.CheckIfSpawnActionAvailable()) {
-				storyTrack.SpawnElement();
-			}
+			playerHand.AnimateCardUse(card);
 			return true;
 		}
 		if(m_state == TurnState.save) {
@@ -102,9 +100,31 @@ public class Level : MonoBehaviour {
 		yield return new WaitForSeconds(0.5f);
 		drawing = false;
 	}
-	
+
+	public void StartCardAnimation() {
+		m_state = TurnState.useAnimate;
+	}
+
+	public void EndCardAnimation(CardInHand card) {
+		CardInfo cardInfo = card.info;
+		m_state = TurnState.save;
+		storyTrack.eventController.HandleCard(cardInfo);
+		storyTrack.CheckEventState();
+		
+		if(storyTrack.CheckIfSpawnActionAvailable()) {
+			storyTrack.SpawnElement();
+		}
+	}
+
+	private void UpdateGuides() {
+		saveGuide.renderer.enabled = m_state == TurnState.save;
+		useGuide.renderer.enabled = m_state == TurnState.use;
+		playerHand.isEnabled = m_state == TurnState.save || m_state == TurnState.use;
+	}
+
 	// Update is called once per frame
 	void Update () {
+		UpdateGuides();
 		if(m_debug && m_state == TurnState.loading) {
 			LoadLevel ("test");
 		}

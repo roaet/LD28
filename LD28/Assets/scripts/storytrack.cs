@@ -132,11 +132,13 @@ public class Storytrack : MonoBehaviour {
 	}
 	
 	private IEnumerator InitialLoad() {
+		int i = 0;
 		while(CheckIfSpawnActionAvailable()) {
 			SpawnElement();
 			yield return new WaitForSeconds(0.5f);
+			if(i == 1) UpdateEventScreen();
+			i++;
 		}
-		UpdateEventScreen();
 	}
 	
 	private void CreateTwist(string sprite) {

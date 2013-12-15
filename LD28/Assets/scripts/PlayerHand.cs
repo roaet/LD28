@@ -22,6 +22,7 @@ public class PlayerHand : MonoBehaviour {
 	private GameObject confirmObject;
 	private bool change;
 	private bool confirmSelection;
+	private bool m_is_enabled;
 
 	// Use this for initialization
 	void Start () {
@@ -29,6 +30,16 @@ public class PlayerHand : MonoBehaviour {
 		lastFocusedCard = focusedCard = null;
 		change = false;
 		confirmSelection = false;
+		m_is_enabled = false;
+	}
+
+	public bool isEnabled {
+		get {
+			return m_is_enabled;
+		}
+		set {
+			m_is_enabled = value;
+		}
 	}
 
 	public int Handsize {
@@ -46,19 +57,36 @@ public class PlayerHand : MonoBehaviour {
 	}
 
 	public void CardWasClicked(CardInHand card) {
-		if(selectedCard != null) return;
+		if(selectedCard != null || !m_is_enabled) return;
 		SelectACard(card);
 	}
 
 	public void CardFocused(CardInHand card) {
-		if(selectedCard != null) return;
+		if(selectedCard != null || !m_is_enabled) return;
 		focusedCard = card;
 	}
 	
 	public void CardUnfocused(CardInHand card) {
-		if(selectedCard != null) return;
+		if(selectedCard != null || !m_is_enabled) return;
 		lastFocusedCard = card;
 		focusedCard = null;
+	}
+
+	public void AnimateCardUse(CardInHand card) {
+		StartCoroutine("AnimateCardUseHelper", card);
+	}
+
+	private IEnumerator AnimateCardUseHelper(CardInHand card) {
+		Debug.Log ("Animating");
+		level.StartCardAnimation();
+		iTween.FadeTo(card.gameObject, 0.0f, 0.5f);
+		iTween.MoveBy (card.gameObject, new Vector3(0.0f, -5.0f, 0.0f), 0.5f);
+		yield return new WaitForSeconds(1.0f);
+		
+		m_cardManager.deck.PutCardIntoDiscard(card.info);
+		Destroy (card.gameObject);
+		Debug.Log ("Done animating");
+		level.EndCardAnimation(card);
 	}
 
 	private void TweenTo(CardInHand card, Vector3 position) {
@@ -238,12 +266,8 @@ public class PlayerHand : MonoBehaviour {
 	}
 
 	public void ConfirmSelection() {
-		Destroy(confirmObject);
+		if(confirmObject != null) Destroy(confirmObject);
 		bool doDestroy = level.CardSelected(selectedCard);
-		if(doDestroy) {
-			m_cardManager.deck.PutCardIntoDiscard(selectedCard.info);
-			Destroy (selectedCard.gameObject);
-		}
 		selectedCard.selected = false;
 		selectedCard = null;
 	}
