@@ -5,6 +5,8 @@ public class Mob : MonoBehaviour {
 	private MobInfo m_info;
 	private SpriteRenderer m_sprite;
 
+	private int m_health;
+
 	void Awake() {
 		m_sprite = GetComponent<SpriteRenderer>();
 	}

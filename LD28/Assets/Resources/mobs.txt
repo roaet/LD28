@@ -1,0 +1,13 @@
+{
+	"mobCount" : "2",
+	"mobs" : [
+		{
+			"name" : "baby_blue_dragon",
+			"sprite" : "dragon_0"
+		},
+		{
+			"name" : "baby_green_dragon",
+			"sprite" : "dragon_3"
+		}
+	}
+}

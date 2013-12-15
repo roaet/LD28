@@ -7,17 +7,26 @@ public class Game : MonoBehaviour {
 	public Level currentLevel;
 
 	public string cardFile = "cards";
+	public string mobFile = "mobs";
 
 	private CardManager m_cardManager;
+	private MobManager m_mobManager;
 
 	void Awake() {
 		m_cardManager = new CardManager(cardFile);
+		m_mobManager = new MobManager(mobFile);
 		DontDestroyOnLoad(gameObject);
 	}
 
 	public CardManager cardManager {
 		get {
 			return m_cardManager;
+		}
+	}
+	
+	public MobManager mobManager{
+		get {
+			return m_mobManager;
 		}
 	}
 	

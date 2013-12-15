@@ -4,45 +4,33 @@
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "1",
-			"mobs": [
-				{ "sprite": "dragon_18" }
-			]
+			"mobs": ["baby_blue_dragon"]
 		},
 		{ 
 			"sprite": "inn", 
 			"color": {"r": "1.0", "g": "0.0", "b": "0.0"},
 			"mobCount": "1",
-			"mobs": [
-				{ "sprite": "dragon_17" }
-			]
+			"mobs": ["baby_green_dragon"]
 		},
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "1",
-			"mobs": [
-				{ "sprite": "dragon_15" }
-			]
+			"mobs": ["baby_blue_dragon"]
 		},
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "1",
-			"mobs": [
-				{ "sprite": "dragon_14" }
-			]
+			"mobs": ["baby_blue_dragon"]
 		},
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "1",
-			"mobs": [
-				{ "sprite": "dragon_19" }
-			]
+			"mobs": ["baby_green_dragon"]
 		},
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "1",
-			"mobs": [
-				{ "sprite": "dragon_20" }
-			]
+			"mobs": ["baby_blue_dragon"]
 		},
 		{ "sprite": "inn" },
 		{ "sprite": "exit" }

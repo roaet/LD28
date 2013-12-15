@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum TurnState {
-	draw, use, save
+	loading, draw, use, save
 }
 
 public class Level : MonoBehaviour {
@@ -12,11 +12,13 @@ public class Level : MonoBehaviour {
 	private bool m_debug = true;
 	private Game m_game;
 	private CardManager m_debugCardManager;
+	private MobManager m_debugMobManager;
 	private TurnState m_state;
 	private bool drawing;
 	
 	void Awake() {
 		drawing = false;
+		storyTrack.level = this;
 	}
 
 	public void LoadLevel(string level) {
@@ -26,9 +28,11 @@ public class Level : MonoBehaviour {
 		}
 		if(m_debug) {
 			m_debugCardManager = new CardManager("cards");
+			m_debugMobManager = new MobManager("mobs");
 		}
 		playerHand.cardManager = cardManager;
 		playerHand.level = this;
+		m_state = TurnState.draw;
 	}
 
 	public bool CardSelected(CardInHand card) {
@@ -60,6 +64,13 @@ public class Level : MonoBehaviour {
 			return m_debugCardManager;
 		}
 	}
+	
+	public MobManager mobManager {
+		get {
+			if(m_game != null) return m_game.mobManager;
+			return m_debugMobManager;
+		}
+	}
 
 	public Game game {
 		get {
@@ -77,6 +88,9 @@ public class Level : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if(m_debug && m_state == TurnState.loading) {
+			LoadLevel ("test");
+		}
 		switch(m_state) {
 		case TurnState.draw: { // auto draw to max hand size (3)
 			if(Input.GetKeyDown(KeyCode.D)) {
@@ -103,9 +117,6 @@ public class Level : MonoBehaviour {
 			if(storyTrack.CheckIfSpawnActionAvailable()) {
 				storyTrack.SpawnElement();
 			}
-		}
-		if(m_debug && Input.GetKeyDown(KeyCode.Home)) {
-			LoadLevel ("test");
 		}
 	}
 }

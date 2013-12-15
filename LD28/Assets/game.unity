@@ -237,6 +237,7 @@ MonoBehaviour:
   firstCard: {fileID: 1436476409}
   lastCard: {fileID: 730057656}
   cardConfirm: {fileID: 100004, guid: 5f3c9bb05457080468c9effcaeb4a8ad, type: 2}
+  level: {fileID: 0}
 --- !u!1 &730057656
 GameObject:
   m_ObjectHideFlags: 0

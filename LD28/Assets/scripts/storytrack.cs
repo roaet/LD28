@@ -17,6 +17,7 @@ public class Storytrack : MonoBehaviour {
 
 	private List<STElement> elements;
 	private List<STElementInfo> infos;
+	private Level m_level;
 
 	// Test variables
 	int colorModulo;
@@ -25,6 +26,14 @@ public class Storytrack : MonoBehaviour {
 	void Awake () {
 		elements = new List<STElement>();
 		infos = new List<STElementInfo>();
+	}
+
+	public Level level {
+		set {
+			m_level = value;
+		} get {
+			return m_level;
+		}
 	}
 
 	public int LoadStoryTrackJSON(string trackName) {
@@ -91,7 +100,7 @@ public class Storytrack : MonoBehaviour {
 	public void UpdateEventScreen() {
 		if(elements.Count == 0) return;
 		StartCoroutine("WaitForBottomToSleep");
-		eventController.LoadEventInfo(this, GetActiveElement().eventInfo);
+		eventController.LoadEventInfo(m_level.mobManager, this, GetActiveElement().eventInfo);
 	}
 
 	public void PopBottom() {

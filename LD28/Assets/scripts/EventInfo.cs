@@ -4,18 +4,18 @@ using System.Collections.Generic;
 using SimpleJSON;
 
 public class EventInfo {
-	private List<MobInfo> m_mobs;
+	private List<string> m_mobs;
 
 	public EventInfo(JSONNode eventJson) {
-		m_mobs = new List<MobInfo>();
+		m_mobs = new List<string>();
 		int mobCount = eventJson["mobCount"].AsInt;
 		for(int i = 0; i < mobCount; i++) {
-			MobInfo mob = new MobInfo(eventJson["mobs"][i]);
+			string mob = eventJson["mobs"][i];
 			m_mobs.Add(mob);
 		}
 	}
 
-	public List<MobInfo> mobs {
+	public List<string> mobs {
 		get {
 			return m_mobs;
 		}
