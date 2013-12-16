@@ -145,7 +145,7 @@ public class Event : MonoBehaviour {
 		bool doMassAttack = data.card.target == "mass";
 		foreach(Person p in data.chars.party) {
 			if(data.card.type != "basic" && data.card.type != p.info.charClass) continue;
-			int damage = p.damage;
+			int damage = (int)(p.damage * data.card.damageMultiplier);
 			float time = 0.25f;
 			p.charUIElement.AnimateAttack(time);
 			yield return new WaitForSeconds(time);

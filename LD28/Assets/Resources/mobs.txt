@@ -1,10 +1,10 @@
 {
-	"mobCount" : "2",
+	"mobCount" : "6",
 	"mobs" : [
 		{
 			"name" : "baby_blue_dragon",
 			"sprite" : "dragon_0",
-			"health" : "2",
+			"health" : "3",
 			"hasHealth": "true",
 			"damage": "1",
 			"gold" : "2"
@@ -14,8 +14,40 @@
 			"sprite" : "dragon_3",
 			"health" : "1",
 			"hasHealth": "true",
-			"damage": "100",
+			"damage": "2",
 			"gold" : "2"
+		},
+		{
+			"name" : "baby_red_dragon",
+			"sprite" : "dragon_5",
+			"health" : "4",
+			"hasHealth": "true",
+			"damage": "1",
+			"gold" : "2"
+		},
+		{
+			"name" : "blue_dragon",
+			"sprite" : "dragon_8",
+			"health" : "10",
+			"hasHealth": "true",
+			"damage": "2",
+			"gold" : "5"
+		},
+		{
+			"name" : "red_dragon",
+			"sprite" : "dragon_8",
+			"health" : "13",
+			"hasHealth": "true",
+			"damage": "1",
+			"gold" : "5"
+		},
+		{
+			"name" : "green_dragon",
+			"sprite" : "dragon_8",
+			"health" : "4",
+			"hasHealth": "true",
+			"damage": "3",
+			"gold" : "5"
 		}
 	}
 }

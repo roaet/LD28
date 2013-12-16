@@ -1,12 +1,13 @@
 {
-	"cardCount" : "3",
+	"cardCount" : "6",
 	"cards" : [
 		{
-			"name" : "fire", "enabled": "true",
+			"name" : "cleave", "enabled": "true",
 			"sprite" : "fire",
-			"type" : "basic",
+			"type" : "fighter",
 			"target" : "single",
-			"tip": "A single target basic attack",
+			"dmgm": "2.0",
+			"tip": "Fighter only, double damage, single target",
 			"cost": "7"
 		},
 		{
@@ -14,16 +15,45 @@
 			"sprite" : "attack",
 			"type" : "basic",
 			"target" : "single",
+			"dmgm": "1",
 			"tip": "A single target basic attack",
 			"cost": "5"
 		},
 		{
-			"name" : "derp", "enabled": "true",
+			"name" : "swipe", "enabled": "true",
 			"sprite" : "derp",
 			"type" : "basic",
 			"target" : "mass",
+			"dmgm": "0.5",
 			"tip": "A mass target basic attack",
-			"cost": "99"
+			"cost": "10"
+		},
+		{
+			"name" : "stab", "enabled": "true",
+			"sprite" : "stab",
+			"type" : "rogue",
+			"target" : "single",
+			"dmgm": "5.0",
+			"tip": "A single target critical attack",
+			"cost": "10"
+		},
+		{
+			"name" : "inferno", "enabled": "true",
+			"sprite" : "inferno",
+			"type" : "mage",
+			"target" : "mass",
+			"dmgm": "8.0",
+			"tip": "A mass target strong attack",
+			"cost": "12"
+		},
+		{
+			"name" : "fireball", "enabled": "true",
+			"sprite" : "fireball",
+			"type" : "mage",
+			"target" : "single",
+			"dmgm": "4.0",
+			"tip": "A single target basic attack",
+			"cost": "5"
 		}
 	}
 }

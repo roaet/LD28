@@ -1,8 +1,8 @@
 {
 	"entryCount" : "3",
 	"entries" : [
-		{ "name": "derp", "quantity": "1" },
-		{ "name": "attack", "quantity": "2" },
-		{ "name": "fire", "quantity": "2" }
+		{ "name": "swipe", "quantity": "1" },
+		{ "name": "attack", "quantity": "4" },
+		{ "name": "cleave", "quantity": "2" }
 	]
 }

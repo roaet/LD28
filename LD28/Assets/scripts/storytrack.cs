@@ -106,6 +106,10 @@ public class Storytrack : MonoBehaviour {
 		if(info.isInn) {
 			m_level.QueueInn();
 		}
+		if(info.isExit) {
+			m_level.ExitReached();
+			return;
+		}
 		eventController.LoadEventInfo(m_level.mobManager, this, GetActiveElement().eventInfo);
 	}
 

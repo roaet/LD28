@@ -34,6 +34,14 @@ public class CharacterManager {
 		return null;
 	}
 
+	public int GetPartyVision() {
+		int i = 1;
+		foreach(Person p in party) {
+			if(p.info.charClass == "wizard") i++;
+		}
+		return i;
+	}
+
 	public bool AddPersonToParty(Person p) {
 		if(m_party.Count == 4) return false;
 		m_party.Add(p);

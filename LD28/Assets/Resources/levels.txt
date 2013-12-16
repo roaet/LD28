@@ -1,25 +1,8 @@
 {
-	"eventCount": "6",
+	"eventCount": "14",
 	"events": [
-		{ 
-			"sprite": "battle" ,
-			"mobCount": "3",
-			"mobs": [
-				"baby_blue_dragon", 
-				"baby_green_dragon",
-				"baby_blue_dragon"
-			]
-		},
-		{ 
-			"sprite": "battle" ,
-			"mobCount": "1",
-			"mobs": ["baby_blue_dragon"]
-		},
-		{ 
-			"sprite": "battle" ,
-			"mobCount": "1",
-			"mobs": ["baby_blue_dragon"]
-		},
+		{ "sprite": "store", "mobCount": "0", "doShow" : "true", "isStore": "true"},
+		{ "sprite": "inn", "mobCount": "3", "doShow" : "true", "isInn": "true", "mobs": [ "squire", "mage", "rogue" ]},
 		{ 
 			"sprite": "battle" ,
 			"mobCount": "1",
@@ -30,6 +13,44 @@
 			"mobCount": "1",
 			"mobs": ["baby_blue_dragon"]
 		},
-		{ "sprite": "exit", "doShow" : "true" }
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "1",
+			"mobs": ["baby_red_dragon"]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "2",
+			"mobs": ["baby_green_dragon", "baby_blue_dragon"]
+		},
+		{ 
+			"sprite": "boss" ,
+			"mobCount": "1",
+			"mobs": ["blue_dragon"]
+		},
+		{ "sprite": "store", "mobCount": "0", "doShow" : "true", "isStore": "true"},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "2",
+			"mobs": ["baby_blue_dragon", "baby_blue_dragon"]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "2",
+			"mobs": ["baby_green_dragon", "baby_red_dragon"]
+		},
+		{ 
+			"sprite": "battle" ,
+			"mobCount": "2",
+			"mobs": ["baby_green_dragon", "baby_green_dragon"]
+		},
+		{ "sprite": "store", "mobCount": "0", "doShow" : "true", "isStore": "true"},
+		{ "sprite": "inn", "mobCount": "1", "doShow" : "true", "isInn": "true", "mobs": [ "squire" ]},
+		{ 
+			"sprite": "boss" ,
+			"mobCount": "2",
+			"mobs": ["blue_dragon", "green_dragon"]
+		},
+		{ "sprite": "exit", "isExit" : "true", "doShow" : "true" }
 	]
 }

@@ -2,7 +2,7 @@
 using System.Collections;
 
 public enum TurnState {
-	loading, draw, use, useAnimate, save, store, mobAnimate, characterAnimate, partyWipe, inn
+	loading, draw, use, useAnimate, save, store, mobAnimate, characterAnimate, partyWipe, inn, win
 }
 
 public class Level : MonoBehaviour {
@@ -17,6 +17,7 @@ public class Level : MonoBehaviour {
 	public int potionCost = 2;
 	public int potionPower = 4;
 	public SpriteRenderer slain;
+	public SpriteRenderer win;
 
 	private bool m_debug = true;
 	private Game m_game;
@@ -28,6 +29,7 @@ public class Level : MonoBehaviour {
 	private bool storeQueued;
 	private int m_gold;
 	private bool innQueued;
+	private bool gameWon;
 	
 	void Awake() {
 		drawing = false;
@@ -36,6 +38,7 @@ public class Level : MonoBehaviour {
 		saveGuide.renderer.enabled = false;
 		useGuide.renderer.enabled = false;
 		slain.renderer.enabled = false;
+		gameWon = false;
 		m_gold = 0;
 	}
 
@@ -289,9 +292,15 @@ public class Level : MonoBehaviour {
 		                                             "oncomplete", "StoreClosed"));
 	}
 
-	// Update is called once per frame
+	public void ExitReached() {
+		Debug.Log ("Win");
+		m_state = TurnState.win;
+		win.renderer.enabled = true;
+		gameWon = true;
+	}
+	// Update is called once per frame 
 	void Update () {
-		if(m_state == TurnState.partyWipe) {
+		if(gameWon || m_state == TurnState.partyWipe || m_state == TurnState.win) {
 			if(Input.anyKeyDown || Input.GetMouseButtonDown(0)) {
 				Destroy(m_game.gameObject);
 				Application.LoadLevel("initialscene");
@@ -303,7 +312,7 @@ public class Level : MonoBehaviour {
 			LoadLevel ("test");
 		}
 		if(m_state != TurnState.loading) {
-			storyTrack.AdjustVisibility(1);
+			storyTrack.AdjustVisibility(characterManager.GetPartyVision());
 		}
 		switch(m_state) {
 		case TurnState.store: {

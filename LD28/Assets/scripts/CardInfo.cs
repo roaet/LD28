@@ -9,6 +9,7 @@ public class CardInfo {
 	private string m_target;
 	private string m_tip;
 	private int m_cost;
+	private float m_dmgMultiplier;
 	private bool m_enabled;
 
 	public CardInfo(JSONNode cardJson) {
@@ -18,9 +19,12 @@ public class CardInfo {
 		m_target = cardJson["target"];
 		m_tip = cardJson["tip"];
 		m_cost = cardJson["cost"].AsInt;
+		m_dmgMultiplier = cardJson["dmgm"].AsFloat;
 		m_enabled = cardJson["enabled"].AsBool;
+
 	}
 
+	public float damageMultiplier { get { return m_dmgMultiplier; } }
 	public string target { get { return m_target; } }
 	public string tip { get { return m_tip + " (Cost: " + m_cost + " gold)"; } }
 	public int cost { get { return m_cost; } }

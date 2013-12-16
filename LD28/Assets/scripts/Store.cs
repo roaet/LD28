@@ -19,6 +19,8 @@ public class Store : MonoBehaviour {
 
 	private bool updateSprites;
 
+	private int page;
+
 	// Use this for initialization
 	void Awake () {
 		slots = new List<Card>();
@@ -27,8 +29,20 @@ public class Store : MonoBehaviour {
 		slots.Add(cardSlot3);
 		slots.Add(cardSlot4);
 		slots.Add(cardSlot5);
+		page = 1;
 
 		m_isStoreUp = false;
+	}
+
+	public void ScrollEvent(bool left) {
+		if(left) {
+			if(page == 1) return;
+			page--;
+		} else {
+			if(availableCards.Count / 5 <= page-1) return;
+			page++;
+		}
+		RefreshCards();
 	}
 
 	public void StoreClosed() {
@@ -49,20 +63,27 @@ public class Store : MonoBehaviour {
 	public void InitializeStore() {
 		CardManager cards = level.cardManager;
 		availableCards = cards.GetEnabledCards();
+		RefreshCards();
+	}
+
+	public void RefreshCards() {
 		for(int i = 0; i < 5; i++) {
 			slots[i].sprite.enabled = false;
 			slots[i].sprite.color = Color.white;
 			slots[i].store = null;
 		}
-		for(int i = 0; i < availableCards.Count && i < 5; i++) {
-
+		int pg = page - 1;
+		for(int i = 0; i < 5; i++) {
+			if(i >= availableCards.Count) break;
+			if(pg * 5 + i >= availableCards.Count) break;
 			slots[i].sprite.enabled = true;
-			if(availableCards[i].cost > level.gold) {
+			if(availableCards[pg * 5 + i].cost > level.gold) {
 				slots[i].sprite.color = new Color(0.5f, 0.5f, 0.5f);
 			}
-			slots[i].InitializeCard(availableCards[i]);
+			slots[i].InitializeCard(availableCards[pg * 5 + i]);
 			slots[i].store = this;
 		}
+
 	}
 
 	public bool isStoreUp {

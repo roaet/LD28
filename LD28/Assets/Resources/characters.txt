@@ -1,9 +1,17 @@
 {
-	"charCount" : "1",
+	"charCount" : "3",
 	"chars" : [
 		{ 
-			"name" : "squire", "portrait": "knight", "class": "fighter", "damage" : "1", "hp" : "10",
-			"tip" : "Basic low damange fighter."
+			"name" : "squire", "portrait": "knight", "class": "fighter", "damage" : "2", "hp" : "12",
+			"tip" : "Basic low damage, tough fighter."
+		},
+		{ 
+			"name" : "rogue", "portrait": "thief", "class": "rogue", "damage" : "3", "hp" : "10",
+			"tip" : "Basic high damage, average toughness fighter. Excels at getting gold"
+		},
+		{ 
+			"name" : "mage", "portrait": "mage", "class": "wizard", "damage" : "1", "hp" : "8",
+			"tip" : "Basic high spell damage, fragile fighter. +1 to vision"
 		}
 	]
 }
