@@ -3,6 +3,6 @@
 	"entries" : [
 		{ "name": "swipe", "quantity": "1" },
 		{ "name": "attack", "quantity": "4" },
-		{ "name": "cleave", "quantity": "2" }
+		{ "name": "cleave", "quantity": "1" }
 	]
 }

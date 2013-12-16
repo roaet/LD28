@@ -143,7 +143,10 @@ public class Event : MonoBehaviour {
 
 	private IEnumerator DoCharActions(CharActionData data) {
 		bool doMassAttack = data.card.target == "mass";
-		foreach(Person p in data.chars.party) {
+		if(data.card.name == "rest") {
+			HealAllPlayers(5, data.chars);
+		} else foreach(Person p in data.chars.party) {
+			if(p.currentHealth == 0) continue;
 			if(data.card.type != "basic" && data.card.type != p.info.charClass) continue;
 			int damage = (int)(p.damage * data.card.damageMultiplier);
 			float time = 0.25f;
@@ -156,6 +159,12 @@ public class Event : MonoBehaviour {
 		}
 		data.level.EndCharacterAnimation();
 
+	}
+
+	private void HealAllPlayers(int cure, CharacterManager chars) {
+		foreach(Person p in chars.party) {
+			p.Heal(cure);
+		}
 	}
 
 	private void DamageAllPlayers(int damage, CharacterManager chars) {
